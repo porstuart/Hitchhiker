@@ -13,7 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   static const IconData facebook = IconData(0xe901, fontFamily: "CustomIcons");
   static const IconData googlePlus =
       IconData(0xe902, fontFamily: "CustomIcons");
-  static const IconData linkedin = IconData(0xe903, fontFamily: "CustomIcons");
+
   bool _isSelected = false;
 
   void _radio() {
@@ -268,6 +268,72 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {},
                             child: Icon(facebook, color: Colors.white),
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 14.0),
+                        child: Container(
+                          width: 45.0,
+                          height: 45.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFFF4F38),
+                                Color(0xFFFF355D),
+                              ],
+                              tileMode: TileMode.clamp,
+                            ),
+                          ),
+                          child: RawMaterialButton(
+                            shape: CircleBorder(),
+                            onPressed: () {},
+                            child: Icon(googlePlus, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 14.0),
+                        child: Container(
+                          width: 45.0,
+                          height: 45.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF17ead9),
+                                Color(0xFF6078ea),
+                              ],
+                              tileMode: TileMode.clamp,
+                            ),
+                          ),
+                          child: RawMaterialButton(
+                            shape: CircleBorder(),
+                            onPressed: () {},
+                            child: Icon(twitter, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: ScreenUtil.getInstance().setHeight(40),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "New User? ",
+                        style: TextStyle(fontFamily: "Poppins-Medium"),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Text(
+                          "Register",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Color(0xFF5D74E3),
+                              fontFamily: "Poppins-Bold"),
                         ),
                       )
                     ],
