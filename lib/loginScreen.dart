@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hitchhiker/registerScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -61,11 +62,15 @@ class _LoginScreenState extends State<LoginScreen> {
         fit: StackFit.expand,
         children: <Widget>[
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(top: 20.0),
-                child: Image.asset("assets/images/hitchhikerLogo.png"),
+                child: Image.asset(
+                  "assets/images/hitchhikerLogo.png",
+                  width: ScreenUtil.getInstance().setWidth(550),
+                  height: ScreenUtil.getInstance().setHeight(400),
+                ),
               ),
               Expanded(
                 child: Container(),
@@ -75,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 60.0),
+              padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -327,7 +332,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(fontFamily: "Poppins-Medium"),
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ),
+                          );
+                        },
                         child: Text(
                           "Register",
                           style: TextStyle(
@@ -335,7 +347,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Color(0xFF5D74E3),
                               fontFamily: "Poppins-Bold"),
                         ),
-                      )
+                      ),
                     ],
                   )
                 ],
