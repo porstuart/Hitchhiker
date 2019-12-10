@@ -1,7 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:toast/toast.dart';
+import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hitchhiker/loginScreen.dart';
+
+final TextEditingController _usernameController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+final TextEditingController _confPassController = TextEditingController();
+final TextEditingController _emailController = TextEditingController();
+final TextEditingController _fNameController = TextEditingController();
+final TextEditingController _lNameController = TextEditingController();
+final TextEditingController _matricController = TextEditingController();
+final TextEditingController _phoneNumController = TextEditingController();
+final TextEditingController _emergeNumController = TextEditingController();
+final TextEditingController _residentialController = TextEditingController();
+String _username,
+    _password,
+    _confPass,
+    _email,
+    _fName,
+    _lName,
+    _matric,
+    _phoneNum,
+    _emergeNum,
+    _residentialHall;
+
+String urlUpload =
+    "http://pickupandlaundry.com/hitchhiker/php/registration.php";
 
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({Key key}) : super(key: key);
@@ -16,22 +44,88 @@ class _RegisterScreenState extends State<RegisterScreen> {
   static const IconData googlePlus =
       IconData(0xe902, fontFamily: "CustomIcons");
 
-  Widget radioButton(bool isSelected) => Container(
-        width: 16.0,
-        height: 16.0,
-        padding: EdgeInsets.all(2.0),
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(width: 2.0, color: Colors.black)),
-        child: isSelected
-            ? Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.black),
-              )
-            : Container(),
-      );
+  void _onRegister() {
+    print('onRegister Button from RegisterUser()');
+    uploadData();
+  }
+
+  void uploadData() {
+    _username = _usernameController.text;
+    _password = _passwordController.text;
+    _confPass = _confPassController.text;
+    _email = _emailController.text;
+    _fName = _fNameController.text;
+    _lName = _lNameController.text;
+    _matric = _matricController.text;
+    _phoneNum = _phoneNumController.text;
+    _emergeNum = _emergeNumController.text;
+    _residentialHall = _residentialController.text;
+
+    if ((_isEmailValid(_email)) &&
+        (_password.length > 5) &&
+        (_phoneNum.length > 5) &&
+        (_password == _confPass)) {
+      ProgressDialog pr = new ProgressDialog(context,
+          type: ProgressDialogType.Normal, isDismissible: false);
+      pr.style(message: "Registration in progress");
+      pr.show();
+
+      http.post(urlUpload, body: {
+        "username": _username,
+        "password": _password,
+        "email": _email,
+        "fName": _fName,
+        "lName": _lName,
+        "matric": _matric,
+        "phoneNum": _phoneNum,
+        "emergeNum": _emergeNum,
+        "residentialHall": _residentialHall
+      }).then((res) {
+        print(res.statusCode);
+        if (res.body == "success") {
+          Toast.show(res.body, context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          savepref(_email, _password);
+          _usernameController.text = '';
+          _passwordController.text = '';
+          _confPassController.text = '';
+          _emailController.text = '';
+          _fNameController.text = '';
+          _lNameController.text = '';
+          _matricController.text = '';
+          _phoneNumController.text = '';
+          _emergeNumController.text = '';
+          _residentialController.text = '';
+          pr.dismiss();
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => LoginScreen()));
+        }
+      }).catchError((err) {
+        print(err);
+      });
+    } else {
+      Toast.show("Check your registration information", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    }
+  }
+
+  bool _isEmailValid(String email) {
+    return RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+  }
+
+  void savepref(String email, String pass) async {
+    print('Inside savepref');
+    _username = _usernameController.text;
+    _password = _passwordController.text;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //true save pref
+    await prefs.setString('email', email);
+    await prefs.setString('pass', pass);
+    print('Save pref $_email');
+    print('Save pref $_password');
+  }
 
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -89,7 +183,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Container(
                     width: double.infinity,
-                    height: ScreenUtil.getInstance().setHeight(1170),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8.0),
@@ -101,8 +194,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                     child: Padding(
-                      padding:
-                          EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                      padding: EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -123,6 +216,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _usernameController,
+                            keyboardType: TextInputType.text,
                             decoration: InputDecoration(
                                 hintText: "Username",
                                 hintStyle: TextStyle(
@@ -138,6 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
                                 hintText: "Password",
@@ -154,6 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _confPassController,
                             obscureText: true,
                             decoration: InputDecoration(
                                 hintText: "Confirm Password",
@@ -170,9 +267,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                                 hintText: "Email",
+                                hintStyle: TextStyle(
+                                    color: Colors.grey, fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "First Name",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          TextField(
+                            controller: _fNameController,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                                hintText: "First Name",
+                                hintStyle: TextStyle(
+                                    color: Colors.grey, fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "Last Name",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          TextField(
+                            controller: _lNameController,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                                hintText: "Last Name",
                                 hintStyle: TextStyle(
                                     color: Colors.grey, fontSize: 12.0)),
                           ),
@@ -186,6 +318,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _matricController,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               WhitelistingTextInputFormatter.digitsOnly
@@ -205,6 +338,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _phoneNumController,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               WhitelistingTextInputFormatter.digitsOnly
@@ -224,6 +358,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _emergeNumController,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               WhitelistingTextInputFormatter.digitsOnly
@@ -243,6 +378,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
+                            controller: _residentialController,
                             decoration: InputDecoration(
                                 hintText: "Residential Hall",
                                 hintStyle: TextStyle(
@@ -279,7 +415,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                print("Register");
+                                _onRegister();
                               },
                               child: Center(
                                 child: Text(
