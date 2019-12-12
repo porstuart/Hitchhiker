@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hitchhiker/loginScreen.dart';
+import 'package:hitchhiker/loginPage.dart';
 
 void main() => runApp(MaterialApp(
       theme: ThemeData(
@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
       () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginScreen(),
+          builder: (context) => LoginPage(),
         ),
       ),
     );

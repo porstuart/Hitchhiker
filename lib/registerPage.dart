@@ -1,38 +1,37 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hitchhiker/loginScreen.dart';
+import 'package:hitchhiker/loginPage.dart';
 
-final TextEditingController _usernameController = TextEditingController();
+final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 final TextEditingController _confPassController = TextEditingController();
-final TextEditingController _emailController = TextEditingController();
 final TextEditingController _fNameController = TextEditingController();
 final TextEditingController _lNameController = TextEditingController();
 final TextEditingController _matricController = TextEditingController();
 final TextEditingController _phoneNumController = TextEditingController();
 final TextEditingController _emergeNumController = TextEditingController();
 final TextEditingController _residentialController = TextEditingController();
-String _username,
+String _email,
     _password,
-    _confPass,
-    _email,
+    _confPassword,
     _fName,
     _lName,
     _matric,
     _phoneNum,
     _emergeNum,
     _residentialHall;
-
 String urlUpload =
     "http://pickupandlaundry.com/hitchhiker/php/registration.php";
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key key}) : super(key: key);
+  const RegisterScreen({Key key}) : super(key: key);
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -43,6 +42,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   static const IconData facebook = IconData(0xe901, fontFamily: "CustomIcons");
   static const IconData googlePlus =
       IconData(0xe902, fontFamily: "CustomIcons");
+  
+  @override
+  void initState(){
+    super.initState();
+  }
 
   void _onRegister() {
     print('onRegister Button from RegisterUser()');
@@ -50,10 +54,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void uploadData() {
-    _username = _usernameController.text;
-    _password = _passwordController.text;
-    _confPass = _confPassController.text;
     _email = _emailController.text;
+    _password = _passwordController.text;
+    _confPassword = _confPassController.text;
     _fName = _fNameController.text;
     _lName = _lNameController.text;
     _matric = _matricController.text;
@@ -63,33 +66,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
-        (_phoneNum.length > 5) &&
-        (_password == _confPass)) {
+        (_phoneNum.length > 5)) {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
       pr.style(message: "Registration in progress");
       pr.show();
 
       http.post(urlUpload, body: {
-        "username": _username,
-        "password": _password,
         "email": _email,
+        "password": _password,
+        "confPassword": _confPassword,
         "fName": _fName,
         "lName": _lName,
         "matric": _matric,
         "phoneNum": _phoneNum,
         "emergeNum": _emergeNum,
-        "residentialHall": _residentialHall
+        "residentialHall": _residentialHall,
       }).then((res) {
         print(res.statusCode);
         if (res.body == "success") {
           Toast.show(res.body, context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-          savepref(_email, _password);
-          _usernameController.text = '';
+          _emailController.text = '';
           _passwordController.text = '';
           _confPassController.text = '';
-          _emailController.text = '';
           _fNameController.text = '';
           _lNameController.text = '';
           _matricController.text = '';
@@ -100,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => LoginScreen()));
+                  builder: (BuildContext context) => LoginPage()));
         }
       }).catchError((err) {
         print(err);
@@ -113,18 +113,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool _isEmailValid(String email) {
     return RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
-  }
-
-  void savepref(String email, String pass) async {
-    print('Inside savepref');
-    _username = _usernameController.text;
-    _password = _passwordController.text;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //true save pref
-    await prefs.setString('email', email);
-    await prefs.setString('pass', pass);
-    print('Save pref $_email');
-    print('Save pref $_password');
   }
 
   Widget horizontalLine() => Padding(
@@ -210,16 +198,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
                           Text(
-                            "Username",
+                            "Email",
                             style: TextStyle(
                                 fontFamily: "Poppins-Medium",
                                 fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
                           TextField(
-                            controller: _usernameController,
-                            keyboardType: TextInputType.text,
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
-                                hintText: "Username",
+                                hintText: "Email",
                                 hintStyle: TextStyle(
                                     color: Colors.grey, fontSize: 12.0)),
                           ),
@@ -259,23 +247,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(35),
-                          ),
-                          Text(
-                            "Email",
-                            style: TextStyle(
-                                fontFamily: "Poppins-Medium",
-                                fontSize: ScreenUtil.getInstance().setSp(26)),
-                          ),
-                          TextField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                                hintText: "Email",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 12.0)),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
                           ),
                           Text(
                             "First Name",
@@ -540,7 +511,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LoginScreen(),
+                              builder: (context) => LoginPage(),
                             ),
                           );
                         },
