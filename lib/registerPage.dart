@@ -1,13 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hitchhiker/loginPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hitchhiker/loginPage.dart';
 
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
@@ -18,6 +15,8 @@ final TextEditingController _matricController = TextEditingController();
 final TextEditingController _phoneNumController = TextEditingController();
 final TextEditingController _emergeNumController = TextEditingController();
 final TextEditingController _residentialController = TextEditingController();
+String urlUpload =
+    "http://pickupandlaundry.com/hitchhiker/php/registration.php";
 String _email,
     _password,
     _confPassword,
@@ -27,26 +26,35 @@ String _email,
     _phoneNum,
     _emergeNum,
     _residentialHall;
-String urlUpload =
-    "http://pickupandlaundry.com/hitchhiker/php/registration.php";
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key key}) : super(key: key);
-
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _RegisterUserState createState() => _RegisterUserState();
+  const RegisterScreen({Key key}) : super(key: key);
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterUserState extends State<RegisterScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RegisterWidget();
+  }
+}
+
+class RegisterWidget extends StatefulWidget {
+  @override
+  RegisterWidgetState createState() => RegisterWidgetState();
+}
+
+class RegisterWidgetState extends State<RegisterWidget> {
   static const IconData twitter = IconData(0xe900, fontFamily: "CustomIcons");
   static const IconData facebook = IconData(0xe901, fontFamily: "CustomIcons");
   static const IconData googlePlus =
       IconData(0xe902, fontFamily: "CustomIcons");
-  
-  @override
-  void initState(){
-    super.initState();
-  }
 
   void _onRegister() {
     print('onRegister Button from RegisterUser()');
@@ -66,14 +74,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
-        (_phoneNum.length > 5)) {
+        (_fName.length > 5) &&
+        (_password == _confPassword)) {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
       pr.style(message: "Registration in progress");
       pr.show();
 
       http.post(urlUpload, body: {
-        "email": _email,
+        " email": _email,
         "password": _password,
         "confPassword": _confPassword,
         "fName": _fName,
@@ -81,27 +90,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
         "matric": _matric,
         "phoneNum": _phoneNum,
         "emergeNum": _emergeNum,
-        "residentialHall": _residentialHall,
+        "residentialHall": _residentialHall
       }).then((res) {
         print(res.statusCode);
-        if (res.body == "success") {
-          Toast.show(res.body, context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-          _emailController.text = '';
-          _passwordController.text = '';
-          _confPassController.text = '';
-          _fNameController.text = '';
-          _lNameController.text = '';
-          _matricController.text = '';
-          _phoneNumController.text = '';
-          _emergeNumController.text = '';
-          _residentialController.text = '';
-          pr.dismiss();
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => LoginPage()));
-        }
+        Toast.show(res.body, context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        _emailController.text = '';
+        _passwordController.text = '';
+        _confPassController.text = '';
+        _fNameController.text = '';
+        _lNameController.text = '';
+        _matricController.text = '';
+        _phoneNumController.text = '';
+        _emergeNumController.text = '';
+        _residentialController.text = '';
+        pr.dismiss();
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
       }).catchError((err) {
         print(err);
       });
@@ -126,10 +131,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
-    ScreenUtil.instance =
-        ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
-
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,

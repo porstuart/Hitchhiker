@@ -63,7 +63,14 @@ class _LoginPageState extends State<LoginPage> {
         if (dres[0] == "success") {
           pr.dismiss();
           print(dres);
-         Passenger passenger = new Passenger(email:dres[1],fName: dres[2],lName:dres[3],matric: dres[4],phoneNum: dres[5],emergeNum: dres[6],residentialHall: dres[7]);
+          Passenger passenger = new Passenger(
+              email: dres[1],
+              fName: dres[2],
+              lName: dres[3],
+              matric: dres[4],
+              phoneNum: dres[5],
+              emergeNum: dres[6],
+              residentialHall: dres[7]);
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -199,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                "Forgot Passwordï¼",
+                                "Forgot Password",
                                 style: TextStyle(
                                     color: Colors.blue,
                                     fontFamily: "Poppins-Medium",
