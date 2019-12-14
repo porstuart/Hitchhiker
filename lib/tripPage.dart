@@ -13,9 +13,25 @@ class TripPage extends StatefulWidget {
 class _TripPageState extends State<TripPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: Row(children: <Widget>[Text("There")],),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "No available trip yet.",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Poppins-Medium",
+                    fontSize: 25),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

@@ -420,9 +420,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
+                              SizedBox(height: 5),
                               SizedBox(height: 5),
                               Container(
                                 child: Row(
