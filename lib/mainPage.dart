@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/profilePage.dart';
-import 'package:hitchhiker/trip.dart';
+import 'package:hitchhiker/tripPage.dart';
 
-class MainScreen extends StatefulWidget {
+class MainPage extends StatefulWidget {
   final Passenger passenger;
 
-  const MainScreen({Key key, this.passenger}) : super(key: key);
+  const MainPage({Key key, this.passenger}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainPageState extends State<MainPage> {
   List<Widget> tabs;
 
   int currentTabIndex = 0;
@@ -21,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     tabs = [
-      Trip(),
+      TripPage(passenger: widget.passenger),
       ProfilePage(passenger: widget.passenger),
     ];
   }
@@ -36,22 +37,25 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.blue));
     return Scaffold(
       body: tabs[currentTabIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTapped,
         currentIndex: currentTabIndex,
-        backgroundColor: Colors.teal[50],
+        //backgroundColor: Colors.blueGrey,
         type: BottomNavigationBarType.fixed,
+
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
+            icon: Icon(Icons.search),
             title: Text("Trip"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, ),
             title: Text("Profile"),
-          ),
+          )
         ],
       ),
     );
