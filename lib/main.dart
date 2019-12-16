@@ -38,19 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
       fit: StackFit.expand,
       children: <Widget>[
         Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF73AEF5),
-                Color(0xFF61A4F1),
-                Color(0xFF478DE0),
-                Color(0xFF398AE5),
-              ],
-              stops: [0.1, 0.4, 0.7, 0.9],
-            ),
-          ),
+          decoration: BoxDecoration(color: Colors.white),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -64,8 +52,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     children: <Widget>[
                       Image.asset(
                         'assets/images/hitchhikerLogo.png',
-                        height: 350,
-                        width: 450,
+                        height: 250,
+                        width: 300,
                       ),
                     ],
                   ),

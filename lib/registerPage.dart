@@ -74,7 +74,6 @@ class RegisterWidgetState extends State<RegisterWidget> {
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
-        (_fName.length > 5) &&
         (_password == _confPassword)) {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
