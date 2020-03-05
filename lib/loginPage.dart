@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hitchhiker/driverMainPage.dart';
 import 'package:hitchhiker/forgotPassword.dart';
-import 'package:hitchhiker/mainPage.dart';
+import 'package:hitchhiker/passengerMainPage.dart';
 import 'package:hitchhiker/registerPage.dart';
 import 'package:hitchhiker/passenger.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-final TextEditingController _emailController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-String urlLogin = "http://pickupandlaundry.com/hitchhiker/php/login.php";
-String urlSecurityCodeForResetPass =
-    "http://pickupandlaundry.com/hitchhiker/php/securityCode.php";
-String _email, _password = "";
-Passenger passenger;
 
 class MyApp extends StatelessWidget {
   @override
@@ -32,6 +26,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String urlLoginPassenger =
+      "http://pickupandlaundry.com/hitchhiker/php/loginPassenger.php";
+  String urlLoginDriver =
+      "http://pickupandlaundry.com/hitchhiker/php/loginDriver.php";
+  String urlSecurityCodeForResetPass =
+      "http://pickupandlaundry.com/hitchhiker/php/securityCode.php";
+  String _email, _password = "";
+  Passenger passenger;
+  var _user = ['Passenger', 'Driver'];
+  var _currentUser = 'Passenger';
+
   @override
   void initState() {
     //loadpref();
@@ -42,12 +49,14 @@ class _LoginPageState extends State<LoginPage> {
   void _onLogin() {
     _email = _emailController.text;
     _password = _passwordController.text;
-    if (_isEmailValid(_email) && (_password.length > 4)) {
+    if (_isEmailValid(_email) &&
+        (_password.length > 4) &&
+        this._currentUser == 'Passenger') {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
-      pr.style(message: "Login in");
+      pr.style(message: "Login as Passenger");
       pr.show();
-      http.post(urlLogin, body: {
+      http.post(urlLoginPassenger, body: {
         "email": _email,
         "password": _password,
       }).then((res) {
@@ -60,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
         if (dres[0] == "success") {
           pr.dismiss();
           print(dres);
-          print(dres[1]);
           Passenger passenger = new Passenger(
               email: dres[1],
               fName: dres[2],
@@ -72,7 +80,48 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MainPage(passenger: passenger)));
+                  builder: (context) =>
+                      PassengerMainPage(passenger: passenger)));
+        } else {
+          pr.dismiss();
+        }
+      }).catchError((err) {
+        pr.dismiss();
+        print(err);
+      });
+    } else if (_email == null || _password == null) {
+      Toast.show("Log in failed, please try again.", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (_isEmailValid(_email) &&
+        (_password.length > 4) &&
+        this._currentUser == 'Driver') {
+      ProgressDialog pr = new ProgressDialog(context,
+          type: ProgressDialogType.Normal, isDismissible: false);
+      pr.style(message: "Login as Driver");
+      pr.show();
+      http.post(urlLoginDriver, body: {
+        "email": _email,
+        "password": _password,
+      }).then((res) {
+        print(res.statusCode);
+        var string = res.body;
+        List dres = string.split(",");
+        print(dres);
+        Toast.show(dres[0], context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        if (dres[0] == "success") {
+          print("success driver");
+          pr.dismiss();
+          print(dres);
+          Driver driver =
+              new Driver(email: dres[1],
+              fName: dres[2],
+              lName: dres[3],
+              matric: dres[4],
+              phoneNum: dres[5],
+              residentialHall: dres[6]);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DriverMainPage(driver: driver)));
         } else {
           pr.dismiss();
         }
@@ -187,6 +236,12 @@ class _LoginPageState extends State<LoginPage> {
     return RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
   }
 
+  void _onDropDownItemSelected(String newValueSelected) {
+    setState(() {
+      this._currentUser = newValueSelected;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
@@ -292,7 +347,37 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.grey, fontSize: 12.0)),
                           ),
                           SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(35),
+                            height: ScreenUtil.getInstance().setHeight(20),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Center(
+                                child: Container(
+                                  height: 40,
+                                  width: 100,
+                                  child: DropdownButton<String>(
+                                    items:
+                                        _user.map((String dropDownStringItem) {
+                                      return DropdownMenuItem<String>(
+                                        value: dropDownStringItem,
+                                        child: Text(
+                                          dropDownStringItem,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String newValueSelected) {
+                                      _onDropDownItemSelected(newValueSelected);
+                                    },
+                                    value: _currentUser,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(10),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -312,7 +397,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

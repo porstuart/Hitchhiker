@@ -4,24 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/passenger.dart';
-import 'package:hitchhiker/tripDetail.dart';
+import 'package:hitchhiker/passengerTripDetail.dart';
 import 'package:hitchhiker/slideRightRoute.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
 double perpage = 1;
 
-class TripPage extends StatefulWidget {
+class AcceptedTripPage extends StatefulWidget {
   final Passenger passenger;
 
-  TripPage({Key key, this.passenger});
+  AcceptedTripPage({Key key, this.passenger});
 
   @override
-  _TripPageState createState() => _TripPageState();
+  _AcceptedTripPageState createState() => _AcceptedTripPageState();
 }
 
-class _TripPageState extends State<TripPage> {
+class _AcceptedTripPageState extends State<AcceptedTripPage> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List data;
 
@@ -143,7 +142,7 @@ class _TripPageState extends State<TripPage> {
                             Container(
                               color: Colors.blue,
                               child: Center(
-                                child: Text("Trip Available",
+                                child: Text("Accepted Trip",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -297,7 +296,7 @@ class _TripPageState extends State<TripPage> {
     Navigator.push(
         context,
         SlideRightRoute(
-            page: TripDetail(trip: trip, passenger: widget.passenger)));
+            page: PassengerTripDetail(trip: trip, passenger: widget.passenger)));
   }
 
   void _onJobDelete() {

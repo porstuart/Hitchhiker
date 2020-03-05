@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/main.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/loginPage.dart';
@@ -16,8 +17,9 @@ int number = 0;
 
 class ProfilePage extends StatefulWidget {
   final Passenger passenger;
+  final Driver driver;
 
-  ProfilePage({this.passenger});
+  ProfilePage({this.passenger, this.driver});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();

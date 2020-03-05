@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hitchhiker/passenger.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/profilePage.dart';
-import 'package:hitchhiker/tripPage.dart';
+import 'package:hitchhiker/driverTripPage.dart';
 
-class MainPage extends StatefulWidget {
-  final Passenger passenger;
+class DriverMainPage extends StatefulWidget {
+  final Driver driver;
 
-  const MainPage({Key key, this.passenger}) : super(key: key);
+  const DriverMainPage({Key key, this.driver}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _DriverMainPageState createState() => _DriverMainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _DriverMainPageState extends State<DriverMainPage> {
   List<Widget> tabs;
 
   int currentTabIndex = 0;
@@ -22,8 +22,8 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     tabs = [
-      TripPage(passenger: widget.passenger),
-      ProfilePage(passenger: widget.passenger),
+      DriverTripPage(driver: widget.driver),
+      ProfilePage(driver: widget.driver),
     ];
   }
 
@@ -53,7 +53,13 @@ class _MainPageState extends State<MainPage> {
             title: Text("Trip"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, ),
+            icon: Icon(Icons.motorcycle),
+            title: Text("Posted Trip"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+            ),
             title: Text("Profile"),
           )
         ],

@@ -2,23 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hitchhiker/trip.dart';
-import 'package:hitchhiker/mainPage.dart';
 import 'package:hitchhiker/passenger.dart';
+import 'package:hitchhiker/passengerMainPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
-class TripDetail extends StatefulWidget {
+class PassengerTripDetail extends StatefulWidget {
   final Passenger passenger;
   final Trip trip;
 
-  const TripDetail({Key key, this.passenger, this.trip}) : super(key: key);
+  const PassengerTripDetail({Key key, this.passenger, this.trip}) : super(key: key);
 
   @override
-  _TripDetailState createState() => _TripDetailState();
+  _PassengerTripDetailState createState() => _PassengerTripDetailState();
 }
 
-class _TripDetailState extends State<TripDetail> {
+class _PassengerTripDetailState extends State<PassengerTripDetail> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -47,7 +47,7 @@ class _TripDetailState extends State<TripDetail> {
     Navigator.pop(
         context,
         MaterialPageRoute(
-          builder: (context) => MainPage(
+          builder: (context) => PassengerMainPage(
             passenger: widget.passenger,
           ),
         ));
@@ -155,7 +155,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
 
   void _onAcceptedTrip() {
     if (widget.passenger.email == "user@noregister") {
-      Toast.show("Please register to view accept jobs", context,
+      Toast.show("Please register to view accept trips", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
     } else {
@@ -193,7 +193,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   Future<String> acceptRequest() async {
-    String urlLoadJobs = "http://slumberjer.com/myhelper/php/accept_job.php";
+    String urlLoadJobs = "http://pickupandlaundry.com/hitchhiker/php/acceptTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Accepting Job");
@@ -221,7 +221,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   void _onLogin(String email, BuildContext ctx) {
-    String urlgetuser = "http://slumberjer.com/myhelper/php/get_user.php";
+    String urlgetuser = "http://pickupandlaundry.com/hitchhiker/php/getUser.php";
 
     http.post(urlgetuser, body: {
       "email": email,
@@ -238,11 +238,11 @@ class _DetailInterfaceState extends State<DetailInterface> {
             matric: dres[4],
             phoneNum: dres[5],
             emergeNum: dres[6],
-            residentialHall: dres[6]);
+            residentialHall: dres[7]);
         Navigator.push(
             ctx,
             MaterialPageRoute(
-                builder: (context) => MainPage(passenger: passenger)));
+                builder: (context) => PassengerMainPage(passenger: passenger)));
       }
     }).catchError((err) {
       print(err);
