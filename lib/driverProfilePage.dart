@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hitchhiker/main.dart';
-import 'package:hitchhiker/passenger.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/loginPage.dart';
 import 'package:hitchhiker/registerPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String urlGetPassenger =
-    "http://pickupandlaundry.com/hitchhiker/php/getPassenger.php";
+String urlGetdriver =
+    "http://pickupandlaundry.com/hitchhiker/php/getdriver.php";
 String urlUpdate =
-    "http://pickupandlaundry.com/hitchhiker/php/updateProfile.php";
+    "http://pickupandlaundry.com/hitchhiker/php/updateDriverProfile.php";
 int number = 0;
 
-class ProfilePage extends StatefulWidget {
-  final Passenger passenger;
+class DriverProfilePage extends StatefulWidget {
+  final Driver driver;
 
-  ProfilePage({this.passenger});
+  DriverProfilePage({this.driver});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _DriverProfilePageState createState() => _DriverProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _DriverProfilePageState extends State<DriverProfilePage> {
   GlobalKey<RefreshIndicatorState> refreshKey;
 
   @override
@@ -34,8 +34,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _changePassword() {
     TextEditingController passwordController = TextEditingController();
-    print(widget.passenger.fName + " " + widget.passenger.lName);
-    if (widget.passenger.fName == "not register") {
+    print(widget.driver.fName + " " + widget.driver.lName);
+    if (widget.driver.fName == "not register") {
       Toast.show("Not allowed", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change Password for " + widget.passenger.fName),
+          title: new Text("Change Password for " + widget.driver.fName),
           content: new TextField(
             controller: passwordController,
             decoration: InputDecoration(
@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   return;
                 }
                 http.post(urlUpdate, body: {
-                  "email": widget.passenger.email,
+                  "email": widget.driver.email,
                   "password": passwordController.text,
                 }).then((res) {
                   var string = res.body;
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (dres[0] == "success") {
                     print('in success');
                     setState(() {
-                      widget.passenger.fName = dres[2];
+                      widget.driver.fName = dres[2];
                       if (dres[0] == "success") {
                         Toast.show("Success", context,
                             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -99,8 +99,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _changePhone() {
     TextEditingController phoneNumController = TextEditingController();
-    print(widget.passenger.fName + " " + widget.passenger.lName);
-    if (widget.passenger.fName == "not register") {
+    print(widget.driver.fName + " " + widget.driver.lName);
+    if (widget.driver.fName == "not register") {
       Toast.show("Not allowed", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change contact for " + widget.passenger.fName),
+          title: new Text("Change contact for " + widget.driver.fName),
           content: new TextField(
               keyboardType: TextInputType.phone,
               controller: phoneNumController,
@@ -127,76 +127,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   return;
                 }
                 http.post(urlUpdate, body: {
-                  "email": widget.passenger.email,
+                  "email": widget.driver.email,
                   "phoneNum": phoneNumController.text,
                 }).then((res) {
                   var string = res.body;
                   List dres = string.split(",");
                   if (dres[0] == "success") {
                     setState(() {
-                      widget.passenger.phoneNum = dres[5];
-                      Toast.show("Success ", context,
-                          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-                      Navigator.of(context).pop();
-                      return;
-                    });
-                  }
-                }).catchError((err) {
-                  print(err);
-                });
-              },
-            ),
-            new FlatButton(
-              child: new Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _changeEmergeNum() {
-    TextEditingController emergeNumController = TextEditingController();
-    print(widget.passenger.fName + " " + widget.passenger.lName);
-    if (widget.passenger.fName == "not register") {
-      Toast.show("Not allowed", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      return;
-    }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text(
-              "Change emergency contact number for " + widget.passenger.fName),
-          content: new TextField(
-              keyboardType: TextInputType.phone,
-              controller: emergeNumController,
-              decoration: InputDecoration(
-                labelText: 'Emergency Contact Number',
-                icon: Icon(Icons.phone),
-              )),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Yes"),
-              onPressed: () {
-                if (emergeNumController.text.length < 5) {
-                  Toast.show("Please enter correct phone number", context,
-                      duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-                  return;
-                }
-                http.post(urlUpdate, body: {
-                  "email": widget.passenger.email,
-                  "emergeNum": emergeNumController.text,
-                }).then((res) {
-                  var string = res.body;
-                  List dres = string.split(",");
-                  if (dres[0] == "success") {
-                    setState(() {
-                      widget.passenger.emergeNum = dres[6];
+                      widget.driver.phoneNum = dres[5];
                       Toast.show("Success ", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
                       Navigator.of(context).pop();
@@ -222,8 +160,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _changeResidentialHall() {
     TextEditingController residentialHallController = TextEditingController();
-    print(widget.passenger.fName + " " + widget.passenger.lName);
-    if (widget.passenger.fName == "not register") {
+    print(widget.driver.fName + " " + widget.driver.lName);
+    if (widget.driver.fName == "not register") {
       Toast.show("Not allowed", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
@@ -232,13 +170,12 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:
-              new Text("Change residential hall for " + widget.passenger.fName),
+          title: new Text("Change residential hall for " + widget.driver.fName),
           content: new TextField(
             controller: residentialHallController,
             decoration: InputDecoration(
               labelText: 'Residential Hall',
-              icon: Icon(Icons.lock),
+              icon: Icon(Icons.home),
             ),
           ),
           actions: <Widget>[
@@ -246,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: new Text("Yes"),
               onPressed: () {
                 http.post(urlUpdate, body: {
-                  "email": widget.passenger.email,
+                  "email": widget.driver.email,
                   "residentialHall": residentialHallController.text,
                 }).then((res) {
                   var string = res.body;
@@ -254,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (dres[0] == "success") {
                     print('in success');
                     setState(() {
-                      widget.passenger.residentialHall = dres[7];
+                      widget.driver.residentialHall = dres[6];
                       if (dres[0] == "success") {
                         Toast.show("Success", context,
                             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -280,9 +217,186 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _changeCarBrand() {
+    TextEditingController carBrandController = TextEditingController();
+    print(widget.driver.fName + " " + widget.driver.lName);
+    if (widget.driver.fName == "not register") {
+      Toast.show("Not allowed", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Change car brand for " + widget.driver.fName),
+          content: new TextField(
+            controller: carBrandController,
+            decoration: InputDecoration(
+              labelText: 'Car Brand',
+              icon: Icon(Icons.lock),
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                http.post(urlUpdate, body: {
+                  "email": widget.driver.email,
+                  "carBrand": carBrandController.text,
+                }).then((res) {
+                  var string = res.body;
+                  List dres = string.split(",");
+                  if (dres[0] == "success") {
+                    print('in success');
+                    setState(() {
+                      widget.driver.carBrand = dres[7];
+                      if (dres[0] == "success") {
+                        Toast.show("Success", context,
+                            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                        savepref(carBrandController.text);
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  } else {}
+                }).catchError((err) {
+                  print(err);
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _changeCarModel() {
+    TextEditingController carModelController = TextEditingController();
+    print(widget.driver.fName + " " + widget.driver.lName);
+    if (widget.driver.fName == "not register") {
+      Toast.show("Not allowed", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Change car model for " + widget.driver.fName),
+          content: new TextField(
+            controller: carModelController,
+            decoration: InputDecoration(
+              labelText: 'Car Model',
+              icon: Icon(Icons.lock),
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                http.post(urlUpdate, body: {
+                  "email": widget.driver.email,
+                  "carModel": carModelController.text,
+                }).then((res) {
+                  var string = res.body;
+                  List dres = string.split(",");
+                  if (dres[0] == "success") {
+                    print('in success');
+                    setState(() {
+                      widget.driver.carModel = dres[8];
+                      if (dres[0] == "success") {
+                        Toast.show("Success", context,
+                            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                        savepref(carModelController.text);
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  } else {}
+                }).catchError((err) {
+                  print(err);
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _changeCarPlate() {
+    TextEditingController carPlateController = TextEditingController();
+    print(widget.driver.fName + " " + widget.driver.lName);
+    if (widget.driver.fName == "not register") {
+      Toast.show("Not allowed", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Change car plate for " + widget.driver.fName),
+          content: new TextField(
+            controller: carPlateController,
+            decoration: InputDecoration(
+              labelText: 'Car Plate',
+              icon: Icon(Icons.lock),
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                http.post(urlUpdate, body: {
+                  "email": widget.driver.email,
+                  "carPlate": carPlateController.text,
+                }).then((res) {
+                  var string = res.body;
+                  List dres = string.split(",");
+                  if (dres[0] == "success") {
+                    print('in success');
+                    setState(() {
+                      widget.driver.carPlate = dres[9];
+                      if (dres[0] == "success") {
+                        Toast.show("Success", context,
+                            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                        savepref(carPlateController.text);
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  } else {}
+                }).catchError((err) {
+                  print(err);
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _registerAccount() {
     TextEditingController phoneNumController = TextEditingController();
-    print(widget.passenger.fName + " " + widget.passenger.lName);
+    print(widget.driver.fName + " " + widget.driver.lName);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -316,15 +430,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _gotologinPage() {
-    print(widget.passenger.fName + " " + widget.passenger.lName);
+    print(widget.driver.fName + " " + widget.driver.lName);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: new Text("Go to login page?" +
-              widget.passenger.fName +
+              widget.driver.fName +
               " " +
-              widget.passenger.lName),
+              widget.driver.lName),
           content: new Text("Are your sure?"),
           actions: <Widget>[
             new FlatButton(
@@ -350,15 +464,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _gotologout() async {
-    print(widget.passenger.fName + " " + widget.passenger.lName);
+    print(widget.driver.fName + " " + widget.driver.lName);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: new Text("Go to login page?" +
-              widget.passenger.fName +
+              widget.driver.fName +
               " " +
-              widget.passenger.lName),
+              widget.driver.lName),
           content: new Text("Are your sure?"),
           actions: <Widget>[
             new FlatButton(
@@ -427,7 +541,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      widget.passenger.fName?.toUpperCase() ??
+                                      widget.driver.fName?.toUpperCase() ??
                                           'Not register',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -435,7 +549,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                     Text(" "),
                                     Text(
-                                      widget.passenger.lName?.toUpperCase() ??
+                                      widget.driver.lName?.toUpperCase() ??
                                           'Not register',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -446,7 +560,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               Container(
                                 child: Text(
-                                  widget.passenger.email,
+                                  widget.driver.email,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14),
@@ -460,7 +574,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Icon(
                                         Icons.phone_android,
                                       ),
-                                      Text(widget.passenger.phoneNum ??
+                                      Text(widget.driver.phoneNum ??
                                           'not registered'),
                                     ],
                                   ),
@@ -478,7 +592,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 5,
                                       ),
                                       Flexible(
-                                        child: Text(widget.passenger.matric ??
+                                        child: Text(widget.driver.matric ??
                                             "not registered"),
                                       ),
                                     ],
@@ -498,8 +612,53 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       Flexible(
                                         child: Text(
-                                            widget.passenger.residentialHall ??
+                                            widget.driver.residentialHall ??
                                                 "not registered"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.motorcycle,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Flexible(
+                                        child: Text(widget.driver.carBrand ??
+                                            "not registered"),
+                                      ),
+                                      Flexible(
+                                        child: Text(" "),
+                                      ),
+                                      Flexible(
+                                        child: Text(widget.driver.carModel ??
+                                            "not registered"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.motorcycle,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Flexible(
+                                        child: Text(widget.driver.carPlate ??
+                                            "not registered"),
                                       ),
                                     ],
                                   ),
@@ -543,12 +702,20 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Text("CHANGE CONTACT NUMBER"),
                         ),
                         MaterialButton(
-                          onPressed: _changeEmergeNum,
-                          child: Text("CHANGE EMERGENCY CONTACT NUMBER"),
-                        ),
-                        MaterialButton(
                           onPressed: _changeResidentialHall,
                           child: Text("CHANGE RESIDENTIAL HALL"),
+                        ),
+                        MaterialButton(
+                          onPressed: _changeCarBrand,
+                          child: Text("CHANGE CAR BRAND"),
+                        ),
+                        MaterialButton(
+                          onPressed: _changeCarModel,
+                          child: Text("CHANGE CAR MODEL"),
+                        ),
+                        MaterialButton(
+                          onPressed: _changeCarPlate,
+                          child: Text("CHANGE CAR PLATE"),
                         ),
                         MaterialButton(
                           onPressed: _registerAccount,

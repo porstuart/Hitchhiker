@@ -46,7 +46,6 @@ class _DriverTripPageState extends State<DriverTripPage> {
                 await refreshList();
               },
               child: ListView.builder(
-
                   itemCount: data == null ? 1 : data.length + 1,
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -90,8 +89,7 @@ class _DriverTripPageState extends State<DriverTripPage> {
                                                     widget.driver.fName
                                                                 .toUpperCase() +
                                                             " " +
-                                                            widget
-                                                                .driver.lName
+                                                            widget.driver.lName
                                                                 .toUpperCase() ??
                                                         "Not registered",
                                                     style: TextStyle(
@@ -110,8 +108,8 @@ class _DriverTripPageState extends State<DriverTripPage> {
                                                   width: 5,
                                                 ),
                                                 Flexible(
-                                                  child: Text(widget
-                                                      .driver.phoneNum),
+                                                  child: Text(
+                                                      widget.driver.phoneNum),
                                                 ),
                                               ],
                                             ),
@@ -199,7 +197,8 @@ class _DriverTripPageState extends State<DriverTripPage> {
                                         border: Border.all(color: Colors.white),
                                         image: DecorationImage(
                                             fit: BoxFit.fill,
-                                            image: AssetImage("assets/images/trip.jpg")))),
+                                            image: AssetImage(
+                                                "assets/images/trip.jpg")))),
                                 Expanded(
                                   child: Container(
                                     child: Column(
@@ -239,7 +238,7 @@ class _DriverTripPageState extends State<DriverTripPage> {
 
   Future<String> makeRequest() async {
     String urlLoadTrip =
-        "http://pickupandlaundry.com/hitchhiker/php/loadTrip.php";
+        "http://pickupandlaundry.com/hitchhiker/php/loadPostedTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Loading Trip");

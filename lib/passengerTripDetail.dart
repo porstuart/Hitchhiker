@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hitchhiker/passengerTripPage.dart';
 import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/passengerMainPage.dart';
@@ -47,7 +48,7 @@ class _PassengerTripDetailState extends State<PassengerTripDetail> {
     Navigator.pop(
         context,
         MaterialPageRoute(
-          builder: (context) => PassengerMainPage(
+          builder: (context) => PassengerTripPage(
             passenger: widget.passenger,
           ),
         ));
@@ -196,7 +197,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
     String urlLoadJobs = "http://pickupandlaundry.com/hitchhiker/php/acceptTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(message: "Accepting Job");
+    pr.style(message: "Accepting Trip");
     pr.show();
     http.post(urlLoadJobs, body: {
       "tripID": widget.trip.tripID,

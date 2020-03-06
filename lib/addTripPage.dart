@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hitchhiker/driverRegisterPage.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/loginPage.dart';
+import 'package:hitchhiker/registerPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
-final TextEditingController _emailController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-final TextEditingController _confPassController = TextEditingController();
-final TextEditingController _fNameController = TextEditingController();
-final TextEditingController _lNameController = TextEditingController();
-final TextEditingController _matricController = TextEditingController();
-final TextEditingController _phoneNumController = TextEditingController();
-final TextEditingController _emergeNumController = TextEditingController();
-final TextEditingController _residentialController = TextEditingController();
+final TextEditingController _originController = TextEditingController();
+final TextEditingController _destinationController = TextEditingController();
+final TextEditingController _pickupPointController = TextEditingController();
+final TextEditingController _depatureDateController = TextEditingController();
+final TextEditingController _depatureTimeController = TextEditingController();
+final TextEditingController _arrivalTimeController = TextEditingController();
+final TextEditingController _travellingPreferencesController = TextEditingController();
+final TextEditingController _rewardsController = TextEditingController();
 String urlUpload =
-    "http://pickupandlaundry.com/hitchhiker/php/registration.php";
-String _email,
-    _password,
-    _confPassword,
-    _fName,
-    _lName,
-    _matric,
-    _phoneNum,
-    _emergeNum,
-    _residentialHall;
+    "http://pickupandlaundry.com/hitchhiker/php/registrationDriver.php";
+String _origin,
+    _destination,
+    _pickupPoint,
+    _depatureDate,
+    _depatureTime,
+    _arrivalTime,
+    _travellingPreferences,
+    _rewards;
 
-class RegisterScreen extends StatefulWidget {
+class AddTripPage extends StatefulWidget {
+  final Driver driver;
   @override
   _RegisterUserState createState() => _RegisterUserState();
-  const RegisterScreen({Key key}) : super(key: key);
+  const AddTripPage({Key key, this.driver}) : super(key: key);
 }
 
-class _RegisterUserState extends State<RegisterScreen> {
+class _RegisterUserState extends State<AddTripPage> {
   @override
   void initState() {
     super.initState();
@@ -63,15 +63,14 @@ class RegisterWidgetState extends State<RegisterWidget> {
   }
 
   void uploadData() {
-    _email = _emailController.text;
-    _password = _passwordController.text;
-    _confPassword = _confPassController.text;
-    _fName = _fNameController.text;
-    _lName = _lNameController.text;
-    _matric = _matricController.text;
-    _phoneNum = _phoneNumController.text;
-    _emergeNum = _emergeNumController.text;
-    _residentialHall = _residentialController.text;
+    _origin = _originController.text;
+    _destination = _destinationController.text;
+    _pickupPoint = _pickupPointController.text;
+    _depatureDate = _depatureDateController.text;
+    _depatureTime = _depatureTimeController.text;
+    _arrivalTime = _arrivalTimeController.text;
+    _travellingPreferences = _travellingPreferencesController.text;
+    _rewards = _rewardsController.text;
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
@@ -89,8 +88,10 @@ class RegisterWidgetState extends State<RegisterWidget> {
         "lName": _lName,
         "matric": _matric,
         "phoneNum": _phoneNum,
-        "emergeNum": _emergeNum,
-        "residentialHall": _residentialHall
+        "residentialHall": _residentialHall,
+        "carBrand": _carBrand,
+        "carModel": _carModel,
+        "carPlate": _carPlate
       }).then((res) {
         print(res.statusCode);
         Toast.show(res.body, context,
@@ -102,8 +103,10 @@ class RegisterWidgetState extends State<RegisterWidget> {
         _lNameController.text = '';
         _matricController.text = '';
         _phoneNumController.text = '';
-        _emergeNumController.text = '';
         _residentialController.text = '';
+        _carBrandController.text = '';
+        _carModelController.text = '';
+        _carPlateController.text = '';
         pr.dismiss();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
@@ -193,7 +196,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Passenger Register",
+                            "Driver Register",
                             style: TextStyle(
                                 fontSize: ScreenUtil.getInstance().setSp(45),
                                 fontFamily: "Poppins-Bold",
@@ -328,26 +331,6 @@ class RegisterWidgetState extends State<RegisterWidget> {
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
                           Text(
-                            "Emergency Contact Number",
-                            style: TextStyle(
-                                fontFamily: "Poppins-Medium",
-                                fontSize: ScreenUtil.getInstance().setSp(26)),
-                          ),
-                          TextField(
-                            controller: _emergeNumController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              WhitelistingTextInputFormatter.digitsOnly
-                            ],
-                            decoration: InputDecoration(
-                                hintText: "Emergency Contact Number",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 12.0)),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
-                          ),
-                          Text(
                             "Residential Hall",
                             style: TextStyle(
                                 fontFamily: "Poppins-Medium",
@@ -357,6 +340,54 @@ class RegisterWidgetState extends State<RegisterWidget> {
                             controller: _residentialController,
                             decoration: InputDecoration(
                                 hintText: "Residential Hall",
+                                hintStyle: TextStyle(
+                                    color: Colors.grey, fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "Car Brand",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          TextField(
+                            controller: _carBrandController,
+                            decoration: InputDecoration(
+                                hintText: "Car Brand",
+                                hintStyle: TextStyle(
+                                    color: Colors.grey, fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "Car Model",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          TextField(
+                            controller: _carModelController,
+                            decoration: InputDecoration(
+                                hintText: "Car Model",
+                                hintStyle: TextStyle(
+                                    color: Colors.grey, fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "Car Plate",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          TextField(
+                            controller: _carPlateController,
+                            decoration: InputDecoration(
+                                hintText: "Car Plate",
                                 hintStyle: TextStyle(
                                     color: Colors.grey, fontSize: 12.0)),
                           ),
@@ -448,7 +479,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Register as Driver? Click here to ",
+                        "Register as Passenger? Click here to ",
                         style: TextStyle(fontFamily: "Poppins-Medium"),
                       ),
                       InkWell(
@@ -456,7 +487,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DriverRegisterScreen(),
+                              builder: (context) => RegisterScreen(),
                             ),
                           );
                         },

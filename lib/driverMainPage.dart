@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hitchhiker/driver.dart';
-import 'package:hitchhiker/profilePage.dart';
+import 'package:hitchhiker/addTripPage.dart';
 import 'package:hitchhiker/driverTripPage.dart';
+import 'package:hitchhiker/driverProfilePage.dart';
 
 class DriverMainPage extends StatefulWidget {
   final Driver driver;
@@ -23,7 +24,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
     super.initState();
     tabs = [
       DriverTripPage(driver: widget.driver),
-      ProfilePage(driver: widget.driver),
+      AddTripPage(driver: widget.driver),
+      DriverProfilePage(driver: widget.driver),
     ];
   }
 

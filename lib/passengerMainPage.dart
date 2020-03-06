@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hitchhiker/acceptedTripPage.dart';
+import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/profilePage.dart';
 import 'package:hitchhiker/passengerTripPage.dart';
 
 class PassengerMainPage extends StatefulWidget {
   final Passenger passenger;
+  final Trip trip;
 
-  const PassengerMainPage({Key key, this.passenger}) : super(key: key);
+  const PassengerMainPage({Key key, this.passenger,this.trip}) : super(key: key);
 
   @override
   _PassengerMainPageState createState() => _PassengerMainPageState();

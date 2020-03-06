@@ -89,7 +89,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
       pr.show();
 
       http.post(urlUpload, body: {
-        " email": _email,
+        "email": _email,
         "password": _password,
         "confPassword": _confPassword,
         "fName": _fName,

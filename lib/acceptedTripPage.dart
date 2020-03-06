@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/passenger.dart';
-import 'package:hitchhiker/passengerTripDetail.dart';
+import 'package:hitchhiker/acceptedDetail.dart';
 import 'package:hitchhiker/slideRightRoute.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
@@ -13,8 +13,9 @@ double perpage = 1;
 
 class AcceptedTripPage extends StatefulWidget {
   final Passenger passenger;
+  final Trip trip;
 
-  AcceptedTripPage({Key key, this.passenger});
+  AcceptedTripPage({Key key, this.passenger, this.trip});
 
   @override
   _AcceptedTripPageState createState() => _AcceptedTripPageState();
@@ -238,10 +239,10 @@ class _AcceptedTripPageState extends State<AcceptedTripPage> {
 
   Future<String> makeRequest() async {
     String urlLoadTrip =
-        "http://pickupandlaundry.com/hitchhiker/php/loadTrip.php";
+        "http://pickupandlaundry.com/hitchhiker/php/loadAcceptedTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(message: "Loading Jobs");
+    pr.style(message: "Loading Trips");
     pr.show();
     http.post(urlLoadTrip, body: {
       "email": widget.passenger.email ?? "notavail",
@@ -296,7 +297,7 @@ class _AcceptedTripPageState extends State<AcceptedTripPage> {
     Navigator.push(
         context,
         SlideRightRoute(
-            page: PassengerTripDetail(trip: trip, passenger: widget.passenger)));
+            page: AcceptedDetail(trip: trip, passenger: widget.passenger)));
   }
 
   void _onJobDelete() {

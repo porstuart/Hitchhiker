@@ -119,7 +119,10 @@ class _LoginPageState extends State<LoginPage> {
               lName: dres[3],
               matric: dres[4],
               phoneNum: dres[5],
-              residentialHall: dres[6]);
+              residentialHall: dres[6],
+              carBrand: dres[7],
+              carModel: dres[8],
+              carPlate: dres[9]);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => DriverMainPage(driver: driver)));
         } else {
