@@ -451,9 +451,6 @@ class RegisterWidgetState extends State<RegisterWidget> {
                   SizedBox(
                     height: ScreenUtil.getInstance().setHeight(40),
                   ),
-                  SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(40),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

@@ -52,11 +52,11 @@ class _DriverMainPageState extends State<DriverMainPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            title: Text("Trip"),
+            title: Text("Posted Trip"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.motorcycle),
-            title: Text("Posted Trip"),
+            title: Text("Add Trip"),
           ),
           BottomNavigationBarItem(
             icon: Icon(
