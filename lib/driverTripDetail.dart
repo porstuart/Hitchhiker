@@ -4,9 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/driverMainPage.dart';
 import 'package:hitchhiker/trip.dart';
-import 'package:toast/toast.dart';
-import 'package:http/http.dart' as http;
-import 'package:progress_dialog/progress_dialog.dart';
 
 class DriverTripDetail extends StatefulWidget {
   final Driver driver;
@@ -131,121 +128,10 @@ class _DetailInterfaceState extends State<DetailInterface> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                width: 350,
-                child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0)),
-                  height: 40,
-                  child: Text(
-                    'ACCEPT TRIP',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  elevation: 5,
-                  onPressed: _onAcceptedTrip,
-                ),
-              )
             ],
           ),
         ),
       ],
     );
-  }
-
-  void _onAcceptedTrip() {
-    if (widget.driver.email == "user@noregister") {
-      Toast.show("Please register to view accept jobs", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      return;
-    } else {
-      _showDialog();
-    }
-    print("Accept Job");
-  }
-
-  void _showDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Accept " + widget.trip.destination + " trip?"),
-          content: new Text("Are your sure?"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Yes"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                acceptRequest();
-              },
-            ),
-            new FlatButton(
-              child: new Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<String> acceptRequest() async {
-    String urlLoadJobs = "http://slumberjer.com/myhelper/php/accept_job.php";
-    ProgressDialog pr = new ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(message: "Accepting Job");
-    pr.show();
-    http.post(urlLoadJobs, body: {
-      "tripID": widget.trip.tripID,
-      "email": widget.driver.email,
-    }).then((res) {
-      print(res.body);
-      if (res.body == "success") {
-        Toast.show("Success", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        pr.dismiss();
-        _onLogin(widget.driver.email, context);
-      } else {
-        Toast.show("Failed", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        pr.dismiss();
-      }
-    }).catchError((err) {
-      print(err);
-      pr.dismiss();
-    });
-    return null;
-  }
-
-  void _onLogin(String email, BuildContext ctx) {
-    String urlgetuser = "http://slumberjer.com/myhelper/php/get_user.php";
-
-    http.post(urlgetuser, body: {
-      "email": email,
-    }).then((res) {
-      print(res.statusCode);
-      var string = res.body;
-      List dres = string.split(",");
-      print(dres);
-      if (dres[0] == "success") {
-        Driver driver = new Driver(
-            email: dres[1],
-            fName: dres[2],
-            lName: dres[3],
-            matric: dres[4],
-            phoneNum: dres[5],
-            residentialHall: dres[6]);
-        Navigator.push(
-            ctx,
-            MaterialPageRoute(
-                builder: (context) => DriverMainPage(driver: driver)));
-      }
-    }).catchError((err) {
-      print(err);
-    });
   }
 }

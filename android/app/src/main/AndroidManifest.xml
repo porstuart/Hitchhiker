@@ -10,6 +10,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Hitchhiker"
         android:icon="@mipmap/launcher_icon">
+        android:requestLegacyExternalStorage="false"
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

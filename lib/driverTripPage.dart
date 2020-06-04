@@ -6,7 +6,7 @@ import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/driverTripDetail.dart';
 import 'package:hitchhiker/slideRightRoute.dart';
-
+import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -184,7 +184,9 @@ class _DriverTripPageState extends State<DriverTripPage> {
                             widget.driver.fName,
                             widget.driver.lName,
                           ),
-                          onLongPress: _onJobDelete,
+                          onLongPress: () => _onJobDelete(
+                              data[index]['tripID'].toString(),
+                              data[index]['destination'].toString()),
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Row(
@@ -299,7 +301,60 @@ class _DriverTripPageState extends State<DriverTripPage> {
             page: DriverTripDetail(trip: trip, driver: widget.driver)));
   }
 
-  void _onJobDelete() {
-    print("Delete");
+  void _onJobDelete(String tripID, String destination) {
+    print("Delete " + tripID);
+    _showDialog(tripID, destination);
+  }
+
+  void _showDialog(String tripID, String destination) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Delete " + destination),
+          content: new Text("Are your sure?"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteRequest(tripID);
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> deleteRequest(String tripID) async {
+    String urlDeleteTrip = "http://pickupandlaundry.com/hitchhiker/php/deleteTrip.php";
+    ProgressDialog pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(message: "Deleting Trip");
+    pr.show();
+    http.post(urlDeleteTrip, body: {
+      "tripID": tripID,
+    }).then((res) {
+      print(res.body);
+      if (res.body == "success") {
+        Toast.show("Success", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        init();
+      } else {
+        Toast.show("Failed", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      }
+    }).catchError((err) {
+      print(err);
+      pr.dismiss();
+    });
+    return null;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:hitchhiker/loginPage.dart';
 import 'package:hitchhiker/registerPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 final TextEditingController _emailController = TextEditingController();
@@ -18,7 +21,9 @@ final TextEditingController _residentialController = TextEditingController();
 final TextEditingController _carBrandController = TextEditingController();
 final TextEditingController _carModelController = TextEditingController();
 final TextEditingController _carPlateController = TextEditingController();
+File _image;
 
+String pathAsset = 'assets/images/licenseSample.png';
 String urlUpload =
     "http://pickupandlaundry.com/hitchhiker/php/registrationDriver.php";
 String _email,
@@ -26,6 +31,7 @@ String _email,
     _confPassword,
     _fName,
     _lName,
+    _gender,
     _matric,
     _phoneNum,
     _residentialHall,
@@ -61,6 +67,13 @@ class RegisterWidgetState extends State<RegisterWidget> {
   static const IconData facebook = IconData(0xe901, fontFamily: "CustomIcons");
   static const IconData googlePlus =
       IconData(0xe902, fontFamily: "CustomIcons");
+  String _genderVal;
+
+  void _choose() async {
+    _image = await ImagePicker.pickImage(source: ImageSource.camera, imageQuality: 60);
+    setState(() {});
+    //_image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  }
 
   void _onRegister() {
     print('onRegister Button from RegisterUser()');
@@ -73,27 +86,32 @@ class RegisterWidgetState extends State<RegisterWidget> {
     _confPassword = _confPassController.text;
     _fName = _fNameController.text;
     _lName = _lNameController.text;
+    _gender = _genderVal;
     _matric = _matricController.text;
     _phoneNum = _phoneNumController.text;
     _residentialHall = _residentialController.text;
     _carBrand = _carBrandController.text;
     _carModel = _carModelController.text;
     _carPlate = _carPlateController.text;
-    
+
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
-        (_password == _confPassword)) {
+        (_password == _confPassword) &&
+        (_image != null)) {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
       pr.style(message: "Registration in progress");
       pr.show();
 
+      String base64Image = base64Encode(_image.readAsBytesSync());
       http.post(urlUpload, body: {
+        "encoded_string": base64Image,
         "email": _email,
         "password": _password,
         "confPassword": _confPassword,
         "fName": _fName,
         "lName": _lName,
+        "gender": _gender,
         "matric": _matric,
         "phoneNum": _phoneNum,
         "residentialHall": _residentialHall,
@@ -104,6 +122,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
         print(res.statusCode);
         Toast.show(res.body, context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        _image = null;
         _emailController.text = '';
         _passwordController.text = '';
         _confPassController.text = '';
@@ -139,6 +158,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
           color: Colors.black26.withOpacity(.2),
         ),
       );
+
+  List _genderdropdown = ['Male', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -299,6 +320,36 @@ class RegisterWidgetState extends State<RegisterWidget> {
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
                           Text(
+                            "Gender",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          DropdownButton(
+                            hint: Text(
+                              '--Select Gender--',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontFamily: "Poppins-Medium",
+                                  fontSize: ScreenUtil.getInstance().setSp(26)),
+                            ),
+                            value: _genderVal,
+                            onChanged: (value) {
+                              setState(() {
+                                _genderVal = value;
+                              });
+                            },
+                            items: _genderdropdown.map((value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
                             "Matric Number",
                             style: TextStyle(
                                 fontFamily: "Poppins-Medium",
@@ -402,6 +453,28 @@ class RegisterWidgetState extends State<RegisterWidget> {
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
+                          Text(
+                            "License Card",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          GestureDetector(
+                            onTap: _choose,
+                            child: Container(
+                                width: 192,
+                                height: 108,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  image: DecorationImage(
+                                    image: _image == null
+                                        ? AssetImage(pathAsset)
+                                        : FileImage(_image),
+                                    fit: BoxFit.fill,
+                                  ),
+                                )),
+                          ),
+                          Text('Click on image above to take license picture'),
                         ],
                       ),
                     ),

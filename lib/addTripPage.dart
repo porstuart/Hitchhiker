@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hitchhiker/driverMainPage.dart';
-import 'package:hitchhiker/driverRegisterPage.dart';
-import 'package:hitchhiker/driverTripPage.dart';
-import 'package:hitchhiker/loginPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'driver.dart';
-import 'driverRegisterPage.dart';
-import 'loginPage.dart';
 
 String urlAddTrip = "http://pickupandlaundry.com/hitchhiker/php/addTrip.php";
 String urlGetdriver =
@@ -311,8 +306,8 @@ class _AddTripPageState extends State<AddTripPage> {
   }
 
   Future<bool> _onBackPressAppBar() async {
-    _originController.text = '';
-    _destinationController.text = '';
+    _originController.text = "";
+    _destinationController.text = "";
     _pickupPointController.text = "";
     _depatureDateController.text = "";
     _depatureTimeController.text = "";

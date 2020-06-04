@@ -23,6 +23,7 @@ String _email,
     _confPassword,
     _fName,
     _lName,
+    _gender,
     _matric,
     _phoneNum,
     _emergeNum,
@@ -56,6 +57,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
   static const IconData facebook = IconData(0xe901, fontFamily: "CustomIcons");
   static const IconData googlePlus =
       IconData(0xe902, fontFamily: "CustomIcons");
+  String _genderVal;
 
   void _onRegister() {
     print('onRegister Button from RegisterUser()');
@@ -68,6 +70,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
     _confPassword = _confPassController.text;
     _fName = _fNameController.text;
     _lName = _lNameController.text;
+    _gender = _genderVal;
     _matric = _matricController.text;
     _phoneNum = _phoneNumController.text;
     _emergeNum = _emergeNumController.text;
@@ -87,6 +90,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
         "confPassword": _confPassword,
         "fName": _fName,
         "lName": _lName,
+        "gender": _gender,
         "matric": _matric,
         "phoneNum": _phoneNum,
         "emergeNum": _emergeNum,
@@ -128,6 +132,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
           color: Colors.black26.withOpacity(.2),
         ),
       );
+
+  List _genderdropdown = ['Male', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -283,6 +289,36 @@ class RegisterWidgetState extends State<RegisterWidget> {
                                 hintText: "Last Name",
                                 hintStyle: TextStyle(
                                     color: Colors.grey, fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "Gender",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          DropdownButton(
+                            hint: Text(
+                              '--Select Gender--',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontFamily: "Poppins-Medium",
+                                  fontSize: ScreenUtil.getInstance().setSp(26)),
+                            ),
+                            value: _genderVal,
+                            onChanged: (value) {
+                              setState(() {
+                                _genderVal = value;
+                              });
+                            },
+                            items: _genderdropdown.map((value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                           ),
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(30),
