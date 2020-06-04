@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:hitchhiker/driverRegisterPage.dart';
 import 'package:hitchhiker/loginPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 final TextEditingController _emailController = TextEditingController();
@@ -16,6 +19,9 @@ final TextEditingController _matricController = TextEditingController();
 final TextEditingController _phoneNumController = TextEditingController();
 final TextEditingController _emergeNumController = TextEditingController();
 final TextEditingController _residentialController = TextEditingController();
+File _image;
+
+String pathAsset = "assets/images/studentCardSample.jpg";
 String urlUpload =
     "http://pickupandlaundry.com/hitchhiker/php/registration.php";
 String _email,
@@ -59,6 +65,12 @@ class RegisterWidgetState extends State<RegisterWidget> {
       IconData(0xe902, fontFamily: "CustomIcons");
   String _genderVal;
 
+  void _choose() async {
+    _image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 40);
+    setState(() {});
+  }
+
   void _onRegister() {
     print('onRegister Button from RegisterUser()');
     uploadData();
@@ -78,13 +90,16 @@ class RegisterWidgetState extends State<RegisterWidget> {
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
-        (_password == _confPassword)) {
+        (_password == _confPassword) &&
+        (_image != null)) {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
       pr.style(message: "Registration in progress");
       pr.show();
 
+      String base64Image = base64Encode(_image.readAsBytesSync());
       http.post(urlUpload, body: {
+        "encoded_string": base64Image,
         "email": _email,
         "password": _password,
         "confPassword": _confPassword,
@@ -99,6 +114,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
         print(res.statusCode);
         Toast.show(res.body, context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        _image = null;
         _emailController.text = '';
         _passwordController.text = '';
         _confPassController.text = '';
@@ -399,6 +415,29 @@ class RegisterWidgetState extends State<RegisterWidget> {
                           SizedBox(
                             height: ScreenUtil.getInstance().setHeight(30),
                           ),
+                          Text(
+                            "Matric Card",
+                            style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
+                          ),
+                          GestureDetector(
+                            onTap: _choose,
+                            child: Container(
+                                width: 192,
+                                height: 108,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  image: DecorationImage(
+                                    image: _image == null
+                                        ? AssetImage(pathAsset)
+                                        : FileImage(_image),
+                                    fit: BoxFit.fill,
+                                  ),
+                                )),
+                          ),
+                          Text(
+                              'Click on image above to take student card picture'),
                         ],
                       ),
                     ),

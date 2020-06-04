@@ -70,7 +70,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
   String _genderVal;
 
   void _choose() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.camera, imageQuality: 60);
+    _image = await ImagePicker.pickImage(source: ImageSource.camera, imageQuality: 40);
     setState(() {});
     //_image = await ImagePicker.pickImage(source: ImageSource.gallery);
   }
