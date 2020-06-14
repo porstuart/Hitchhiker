@@ -6,22 +6,23 @@ import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/slideRightRoute.dart';
 import 'package:hitchhiker/driverTripDetail.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
 double perpage = 1;
 
-class DriverTripPage extends StatefulWidget {
+class DriverHistoryPage extends StatefulWidget {
   final Driver driver;
 
-  DriverTripPage({Key key, this.driver});
+  DriverHistoryPage({Key key, this.driver});
 
   @override
-  _DriverTripPageState createState() => _DriverTripPageState();
+  _DriverHistoryPageState createState() => _DriverHistoryPageState();
 }
 
-class _DriverTripPageState extends State<DriverTripPage> {
+class _DriverHistoryPageState extends State<DriverHistoryPage> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List data;
 
@@ -46,126 +47,130 @@ class _DriverTripPageState extends State<DriverTripPage> {
                 await refreshList();
               },
               child: ListView.builder(
-                  itemCount: data == null ? 1 : data.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Container(
-                        child: Column(
-                          children: <Widget>[
-                            Stack(children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Center(
-                                    child: Text("Hitchhiker",
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black)),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 300,
-                                    height: 140,
-                                    child: Card(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Icon(
-                                                  Icons.person,
+                itemCount: data == null ? 1 : data.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Container(
+                      child: Column(
+                        children: <Widget>[
+                          Stack(children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Center(
+                                  child: Text("Hitchhiker",
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black)),
+                                ),
+                                SizedBox(height: 10),
+                                Container(
+                                  width: 300,
+                                  height: 140,
+                                  child: Card(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.person,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  widget.driver.fName
+                                                              .toUpperCase() +
+                                                          " " +
+                                                          widget.driver.lName
+                                                              .toUpperCase() ??
+                                                      "Not registered",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Flexible(
-                                                  child: Text(
-                                                    widget.driver.fName
-                                                                .toUpperCase() +
-                                                            " " +
-                                                            widget.driver.lName
-                                                                .toUpperCase() ??
-                                                        "Not registered",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: <Widget>[
-                                                Icon(
-                                                  Icons.phone_android,
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Flexible(
-                                                  child: Text(
-                                                      widget.driver.phoneNum),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: <Widget>[
-                                                Icon(
-                                                  Icons.card_membership,
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Flexible(
-                                                  child: Text(
-                                                      widget.driver.matric),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.phone_android,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                    widget.driver.phoneNum),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.card_membership,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Flexible(
+                                                child:
+                                                    Text(widget.driver.matric),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ]),
-                            SizedBox(
-                              height: 4,
+                                ),
+                              ],
                             ),
-                            Container(
-                              color: Colors.blue,
-                              child: Center(
-                                child: Text("Posted Trip",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    if (index == data.length && perpage > 1) {
-                      return Container(
-                        width: 250,
-                        color: Colors.white,
-                        child: MaterialButton(
-                          child: Text(
-                            "Load More",
-                            style: TextStyle(color: Colors.black),
+                          ]),
+                          SizedBox(
+                            height: 4,
                           ),
-                          onPressed: () {},
+                          Container(
+                            color: Colors.blue,
+                            child: Center(
+                              child: Text("Trip History",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  if (index == data.length && perpage > 1) {
+                    return Container(
+                      width: 250,
+                      color: Colors.white,
+                      child: MaterialButton(
+                        child: Text(
+                          "Load More",
+                          style: TextStyle(color: Colors.black),
                         ),
-                      );
-                    }
-                    index -= 1;
+                        onPressed: () {},
+                      ),
+                    );
+                  }
+                  index -= 1;
+                  DateTime tempDate = new DateFormat("yyyy-MM-dd")
+                      .parse(data[index]['depatureDate']);
+
+                  if (tempDate.isBefore(new DateTime.now())) {
                     return Padding(
                       padding: EdgeInsets.all(2.0),
                       child: Card(
@@ -234,7 +239,10 @@ class _DriverTripPageState extends State<DriverTripPage> {
                         ),
                       ),
                     );
-                  }),
+                  }
+                  return Container();
+                },
+              ),
             )));
   }
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hitchhiker/driver.dart';
+import 'package:hitchhiker/passenger.dart';
+import 'package:hitchhiker/registerPage.dart';
 import 'package:hitchhiker/driverMainPage.dart';
 import 'package:hitchhiker/forgotPassword.dart';
 import 'package:hitchhiker/passengerMainPage.dart';
-import 'package:hitchhiker/registerPage.dart';
-import 'package:hitchhiker/passenger.dart';
-import 'package:hitchhiker/driver.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
@@ -113,8 +113,8 @@ class _LoginPageState extends State<LoginPage> {
           print("success driver");
           pr.dismiss();
           print(dres);
-          Driver driver =
-              new Driver(email: dres[1],
+          Driver driver = new Driver(
+              email: dres[1],
               fName: dres[2],
               lName: dres[3],
               matric: dres[4],
@@ -122,9 +122,12 @@ class _LoginPageState extends State<LoginPage> {
               residentialHall: dres[6],
               carBrand: dres[7],
               carModel: dres[8],
-              carPlate: dres[9]);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => DriverMainPage(driver: driver)));
+              carPlate: dres[9],
+              tripCount: dres[10]);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DriverMainPage(driver: driver)));
         } else {
           pr.dismiss();
         }

@@ -7,7 +7,8 @@ class Driver {
       residentialHall,
       carBrand,
       carModel,
-      carPlate;
+      carPlate,
+      tripCount;
 
   Driver(
       {this.email,
@@ -18,5 +19,6 @@ class Driver {
       this.residentialHall,
       this.carBrand,
       this.carModel,
-      this.carPlate});
+      this.carPlate,
+      this.tripCount});
 }

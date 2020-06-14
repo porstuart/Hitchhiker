@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/driverMainPage.dart';
-import 'package:hitchhiker/trip.dart';
 
 class DriverTripDetail extends StatefulWidget {
   final Driver driver;
@@ -96,7 +96,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
               ),
               Table(children: [
                 TableRow(children: [
-                  Text("Origin", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text("Origin ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(widget.trip.origin),
                 ]),
                 TableRow(children: [

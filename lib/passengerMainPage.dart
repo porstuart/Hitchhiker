@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hitchhiker/acceptedTripPage.dart';
 import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/profilePage.dart';
+import 'package:hitchhiker/acceptedTripPage.dart';
 import 'package:hitchhiker/passengerTripPage.dart';
+import 'package:hitchhiker/passengerHistoryPage.dart';
 
 class PassengerMainPage extends StatefulWidget {
   final Passenger passenger;
   final Trip trip;
 
-  const PassengerMainPage({Key key, this.passenger,this.trip}) : super(key: key);
+  const PassengerMainPage({Key key, this.passenger, this.trip})
+      : super(key: key);
 
   @override
   _PassengerMainPageState createState() => _PassengerMainPageState();
@@ -27,6 +29,9 @@ class _PassengerMainPageState extends State<PassengerMainPage> {
     tabs = [
       PassengerTripPage(passenger: widget.passenger),
       AcceptedTripPage(passenger: widget.passenger),
+      PassengerHistoryPage(
+        passenger: widget.passenger,
+      ),
       ProfilePage(passenger: widget.passenger),
     ];
   }
@@ -61,7 +66,13 @@ class _PassengerMainPageState extends State<PassengerMainPage> {
             title: Text("Accepted Trip"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, ),
+            icon: Icon(Icons.history),
+            title: Text("History Trip"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+            ),
             title: Text("Profile"),
           )
         ],

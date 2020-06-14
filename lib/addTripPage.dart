@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/driverMainPage.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
+import 'package:date_format/date_format.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'driver.dart';
 
 String urlAddTrip = "http://pickupandlaundry.com/hitchhiker/php/addTrip.php";
-String urlGetdriver =
+String urlGetDriver =
     "http://pickupandlaundry.com/hitchhiker/php/getDriver.php";
 
 final TextEditingController _originController = TextEditingController();
 final TextEditingController _destinationController = TextEditingController();
 final TextEditingController _pickupPointController = TextEditingController();
-final TextEditingController _depatureDateController = TextEditingController();
-final TextEditingController _depatureTimeController = TextEditingController();
-final TextEditingController _arrivalTimeController = TextEditingController();
 final TextEditingController _travellingPreferencesController =
     TextEditingController();
 final TextEditingController _rewardsController = TextEditingController();
+DateTime _departDatePicker = new DateTime.now();
+TimeOfDay _departTimePicker = new TimeOfDay.now();
+TimeOfDay _arriveTimePicker = new TimeOfDay.now();
+String _departureDate = DateFormat('yyyy-M-dd').format(_departDatePicker);
+String _departureTime =
+    "${_departTimePicker.hour} : ${_departTimePicker.minute}";
+String _arrivalTime = "${_arriveTimePicker.hour} : ${_arriveTimePicker.minute}";
 
 class AddTripPage extends StatefulWidget {
   final Driver driver;
@@ -166,13 +172,36 @@ class _AddTripPageState extends State<AddTripPage> {
                                     fontSize:
                                         ScreenUtil.getInstance().setSp(26)),
                               ),
-                              TextField(
-                                controller: _depatureDateController,
-                                decoration: InputDecoration(
-                                    hintText: "Depature Date",
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 12.0)),
-                              ),
+                              FlatButton(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.calendar_today),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        '${formatDate(_departDatePicker, [
+                                          dd,
+                                          '-',
+                                          mm,
+                                          '-',
+                                          yyyy
+                                        ])}',
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () async {
+                                    final dtPick = await showDatePicker(
+                                        context: context,
+                                        initialDate: new DateTime.now(),
+                                        firstDate: new DateTime(2020),
+                                        lastDate: new DateTime(2100));
+
+                                    if (dtPick != null &&
+                                        dtPick != _departDatePicker) {
+                                      setState(() {
+                                        _departDatePicker = dtPick;
+                                      });
+                                    }
+                                  }),
                               SizedBox(
                                 height: ScreenUtil.getInstance().setHeight(30),
                               ),
@@ -183,12 +212,35 @@ class _AddTripPageState extends State<AddTripPage> {
                                     fontSize:
                                         ScreenUtil.getInstance().setSp(26)),
                               ),
-                              TextField(
-                                controller: _depatureTimeController,
-                                decoration: InputDecoration(
-                                    hintText: "Depature Time",
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 12.0)),
+                              FlatButton(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.alarm),
+                                    SizedBox(width: 10),
+                                    Text(
+                                        '${_departTimePicker.hour} : ${_departTimePicker.minute}'),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  final timePick = await showTimePicker(
+                                    context: context,
+                                    initialTime: new TimeOfDay.now(),
+                                    builder:
+                                        (BuildContext context, Widget child) {
+                                      return MediaQuery(
+                                        data: MediaQuery.of(context).copyWith(
+                                            alwaysUse24HourFormat: false),
+                                        child: child,
+                                      );
+                                    },
+                                  );
+
+                                  if (timePick != null) {
+                                    setState(() {
+                                      _departTimePicker = timePick;
+                                    });
+                                  }
+                                },
                               ),
                               SizedBox(
                                 height: ScreenUtil.getInstance().setHeight(30),
@@ -200,12 +252,27 @@ class _AddTripPageState extends State<AddTripPage> {
                                     fontSize:
                                         ScreenUtil.getInstance().setSp(26)),
                               ),
-                              TextField(
-                                controller: _arrivalTimeController,
-                                decoration: InputDecoration(
-                                    hintText: "Arrival Time",
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 12.0)),
+                              FlatButton(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.alarm),
+                                    SizedBox(width: 10),
+                                    Text(
+                                        '${_arriveTimePicker.hour} : ${_arriveTimePicker.minute}'),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  final timePick = await showTimePicker(
+                                    context: context,
+                                    initialTime: new TimeOfDay.now(),
+                                  );
+
+                                  if (timePick != null) {
+                                    setState(() {
+                                      _arriveTimePicker = timePick;
+                                    });
+                                  }
+                                },
                               ),
                               SizedBox(
                                 height: ScreenUtil.getInstance().setHeight(30),
@@ -309,9 +376,9 @@ class _AddTripPageState extends State<AddTripPage> {
     _originController.text = "";
     _destinationController.text = "";
     _pickupPointController.text = "";
-    _depatureDateController.text = "";
-    _depatureTimeController.text = "";
-    _arrivalTimeController.text = "";
+    _departDatePicker = new DateTime.now();
+    _departTimePicker = new TimeOfDay.now();
+    _arriveTimePicker = new TimeOfDay.now();
     _travellingPreferencesController.text = "";
     _rewardsController.text = "";
 
@@ -338,13 +405,14 @@ class _AddTripPageState extends State<AddTripPage> {
     pr.show();
 
     http.post(urlAddTrip, body: {
-      "driver_email": widget.driver.email,
+      "driverEmail": widget.driver.email,
+      "tripCount": widget.driver.tripCount,
       "origin": _originController.text,
       "destination": _destinationController.text,
       "pickupPoint": _pickupPointController.text,
-      "depatureDate": _depatureDateController.text,
-      "depatureTime": _depatureTimeController.text,
-      "arrivalTime": _arrivalTimeController.text,
+      "depatureDate": _departureDate,
+      "depatureTime": _departureTime,
+      "arrivalTime": _arrivalTime,
       "travellingPreferences": _travellingPreferencesController.text,
       "rewards": _rewardsController.text,
     }).then((res) {
@@ -355,13 +423,14 @@ class _AddTripPageState extends State<AddTripPage> {
         _originController.text = '';
         _destinationController.text = '';
         _pickupPointController.text = "";
-        _depatureDateController.text = "";
-        _depatureTimeController.text = "";
-        _arrivalTimeController.text = "";
+        _departDatePicker = new DateTime.now();
+        _departTimePicker = new TimeOfDay.now();
+        _arriveTimePicker = new TimeOfDay.now();
         _travellingPreferencesController.text = "";
         _rewardsController.text = "";
         pr.dismiss();
         print(widget.driver.email);
+        print(_departureTime);
         _onLogin(widget.driver.email, context);
       } else {
         pr.dismiss();
@@ -375,7 +444,7 @@ class _AddTripPageState extends State<AddTripPage> {
   }
 
   void _onLogin(String email, BuildContext ctx) {
-    http.post(urlGetdriver, body: {
+    http.post(urlGetDriver, body: {
       "email": email,
     }).then((res) {
       print(res.statusCode);

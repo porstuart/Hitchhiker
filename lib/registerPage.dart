@@ -1,10 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hitchhiker/driverRegisterPage.dart';
 import 'package:hitchhiker/loginPage.dart';
+import 'package:hitchhiker/driverRegisterPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';

@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/addTripPage.dart';
 import 'package:hitchhiker/driverTripPage.dart';
+import 'package:hitchhiker/driverHistoryPage.dart';
 import 'package:hitchhiker/driverProfilePage.dart';
+
 
 class DriverMainPage extends StatefulWidget {
   final Driver driver;
@@ -25,6 +27,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
     tabs = [
       DriverTripPage(driver: widget.driver),
       AddTripPage(driver: widget.driver),
+      DriverHistoryPage(driver: widget.driver),
       DriverProfilePage(driver: widget.driver),
     ];
   }
@@ -57,6 +60,10 @@ class _DriverMainPageState extends State<DriverMainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.motorcycle),
             title: Text("Add Trip"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            title: Text("History Trip"),
           ),
           BottomNavigationBarItem(
             icon: Icon(

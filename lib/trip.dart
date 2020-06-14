@@ -7,7 +7,8 @@ class Trip {
       depatureTime,
       arrivalTime,
       travellingPreferences,
-      rewards;
+      rewards,
+      driverEmail;
 
   Trip(
       {this.tripID,
@@ -18,5 +19,6 @@ class Trip {
       this.depatureTime,
       this.arrivalTime,
       this.travellingPreferences,
-      this.rewards});
+      this.rewards,
+      this.driverEmail});
 }

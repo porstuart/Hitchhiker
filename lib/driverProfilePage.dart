@@ -12,7 +12,6 @@ String urlGetdriver =
     "http://pickupandlaundry.com/hitchhiker/php/getdriver.php";
 String urlUpdate =
     "http://pickupandlaundry.com/hitchhiker/php/updateDriverProfile.php";
-int number = 0;
 
 class DriverProfilePage extends StatefulWidget {
   final Driver driver;
@@ -733,6 +732,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
                     ),
                   );
                 }
+                return Container();
               }),
         ));
   }

@@ -1,19 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hitchhiker/passengerTripPage.dart';
 import 'package:hitchhiker/trip.dart';
+import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/passengerMainPage.dart';
+import 'package:hitchhiker/passengerTripPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
 class PassengerTripDetail extends StatefulWidget {
   final Passenger passenger;
+  final Driver driver;
   final Trip trip;
 
-  const PassengerTripDetail({Key key, this.passenger, this.trip}) : super(key: key);
+  const PassengerTripDetail({Key key, this.passenger, this.trip, this.driver})
+      : super(key: key);
 
   @override
   _PassengerTripDetailState createState() => _PassengerTripDetailState();
@@ -36,9 +39,9 @@ class _PassengerTripDetailState extends State<PassengerTripDetail> {
             child: Container(
               padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
               child: DetailInterface(
-                trip: widget.trip,
-                passenger: widget.passenger,
-              ),
+                  trip: widget.trip,
+                  passenger: widget.passenger,
+                  driver: widget.driver),
             ),
           )),
     );
@@ -59,7 +62,8 @@ class _PassengerTripDetailState extends State<PassengerTripDetail> {
 class DetailInterface extends StatefulWidget {
   final Passenger passenger;
   final Trip trip;
-  DetailInterface({this.passenger, this.trip});
+  final Driver driver;
+  DetailInterface({this.passenger, this.trip, this.driver});
 
   @override
   _DetailInterfaceState createState() => _DetailInterfaceState();
@@ -126,6 +130,16 @@ class _DetailInterfaceState extends State<DetailInterface> {
                   Text("Rewards",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(widget.trip.rewards)
+                ]),
+                TableRow(children: [
+                  Text("Driver", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.trip.driverEmail,
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Color(0xFF5D74E3),
+                        fontFamily: "Poppins-Bold"),
+                  ),
                 ]),
               ]),
               SizedBox(
@@ -194,12 +208,13 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   Future<String> acceptRequest() async {
-    String urlLoadJobs = "http://pickupandlaundry.com/hitchhiker/php/acceptTrip.php";
+    String urlAcceptJob =
+        "http://pickupandlaundry.com/hitchhiker/php/acceptTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Accepting Trip");
     pr.show();
-    http.post(urlLoadJobs, body: {
+    http.post(urlAcceptJob, body: {
       "tripID": widget.trip.tripID,
       "email": widget.passenger.email,
     }).then((res) {
@@ -222,7 +237,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   void _onLogin(String email, BuildContext ctx) {
-    String urlgetuser = "http://pickupandlaundry.com/hitchhiker/php/getUser.php";
+    String urlgetuser =
+        "http://pickupandlaundry.com/hitchhiker/php/getUser.php";
 
     http.post(urlgetuser, body: {
       "email": email,

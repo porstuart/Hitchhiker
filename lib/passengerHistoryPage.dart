@@ -6,23 +6,25 @@ import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/passenger.dart';
 import 'package:hitchhiker/slideRightRoute.dart';
-import 'package:hitchhiker/passengerTripDetail.dart';
+import 'package:hitchhiker/passengerHistoryDetail.dart';
+import 'package:intl/intl.dart';
+import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 
 double perpage = 1;
 
-class PassengerTripPage extends StatefulWidget {
+class PassengerHistoryPage extends StatefulWidget {
   final Passenger passenger;
   final Driver driver;
 
-  PassengerTripPage({Key key, this.passenger, this.driver});
+  PassengerHistoryPage({Key key, this.passenger, this.driver});
 
   @override
-  _PassengerTripPageState createState() => _PassengerTripPageState();
+  _PassengerHistoryPageState createState() => _PassengerHistoryPageState();
 }
 
-class _PassengerTripPageState extends State<PassengerTripPage> {
+class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List data;
 
@@ -143,7 +145,7 @@ class _PassengerTripPageState extends State<PassengerTripPage> {
                             Container(
                               color: Colors.blue,
                               child: Center(
-                                child: Text("Trip Available",
+                                child: Text("Trip History",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -168,83 +170,92 @@ class _PassengerTripPageState extends State<PassengerTripPage> {
                       );
                     }
                     index -= 1;
-                    return Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Card(
-                        elevation: 2,
-                        child: InkWell(
-                          onTap: () => _onTripDetail(
-                            data[index]['tripID'],
-                            data[index]['origin'],
-                            data[index]['destination'],
-                            data[index]['pickupPoint'],
-                            data[index]['depatureDate'],
-                            data[index]['depatureTime'],
-                            data[index]['arrivalTime'],
-                            data[index]['travellingPreferences'],
-                            data[index]['rewards'],
-                            data[index]['driverEmail'],
-                            widget.passenger.fName,
-                            widget.passenger.lName,
-                          ),
-                          onLongPress: _onJobDelete,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.white),
-                                        image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: AssetImage(
-                                                "assets/images/trip.jpg")))),
-                                Expanded(
-                                  child: Container(
-                                    child: Column(
-                                      children: <Widget>[
-                                        Text(
-                                            data[index]['destination']
-                                                .toString()
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(data[index]['origin']),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(data[index]['depatureDate']),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(data[index]['depatureTime']),
-                                      ],
+                    DateTime tempDate = new DateFormat("yyyy-MM-dd")
+                        .parse(data[index]['depatureDate']);
+
+                    if (tempDate.isBefore(new DateTime.now())) {
+                      return Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Card(
+                          elevation: 2,
+                          child: InkWell(
+                            onTap: () => _onTripDetail(
+                              data[index]['tripID'],
+                              data[index]['origin'],
+                              data[index]['destination'],
+                              data[index]['pickupPoint'],
+                              data[index]['depatureDate'],
+                              data[index]['depatureTime'],
+                              data[index]['arrivalTime'],
+                              data[index]['travellingPreferences'],
+                              data[index]['rewards'],
+                              data[index]['driverEmail'],
+                              widget.passenger.fName,
+                              widget.passenger.lName,
+                            ),
+                            onLongPress: () => _onJobDelete(
+                                data[index]['tripID'].toString(),
+                                data[index]['destination'].toString()),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border:
+                                              Border.all(color: Colors.white),
+                                          image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: AssetImage(
+                                                  "assets/images/trip.jpg")))),
+                                  Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        children: <Widget>[
+                                          Text(
+                                              data[index]['destination']
+                                                  .toString()
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(data[index]['origin']),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(data[index]['depatureDate']),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(data[index]['depatureTime']),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    }
+                    return Container();
                   }),
             )));
   }
 
   Future<String> makeRequest() async {
     String urlLoadTrip =
-        "http://pickupandlaundry.com/hitchhiker/php/loadTrip.php";
+        "http://pickupandlaundry.com/hitchhiker/php/loadAcceptedTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(message: "Loading Trips");
+    pr.style(message: "Loading Trip");
     pr.show();
     http.post(urlLoadTrip, body: {
       "email": widget.passenger.email ?? "notavail",
@@ -301,13 +312,67 @@ class _PassengerTripPageState extends State<PassengerTripPage> {
     Navigator.push(
         context,
         SlideRightRoute(
-            page: PassengerTripDetail(
+            page: PassengerHistoryDetail(
                 trip: trip,
-                passenger: widget.passenger,
-                driver: widget.driver)));
+                driver: widget.driver,
+                passenger: widget.passenger)));
   }
 
-  void _onJobDelete() {
-    print("Delete");
+  void _onJobDelete(String tripID, String destination) {
+    print("Delete " + tripID);
+    _showDialog(tripID, destination);
+  }
+
+  void _showDialog(String tripID, String destination) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Delete " + destination),
+          content: new Text("Are your sure?"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteRequest(tripID);
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> deleteRequest(String tripID) async {
+    String urlDeleteTrip =
+        "http://pickupandlaundry.com/hitchhiker/php/deleteTrip.php";
+    ProgressDialog pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(message: "Deleting Trip");
+    pr.show();
+    http.post(urlDeleteTrip, body: {
+      "tripID": tripID,
+    }).then((res) {
+      print(res.body);
+      if (res.body == "success") {
+        Toast.show("Success", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        init();
+      } else {
+        Toast.show("Failed", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      }
+    }).catchError((err) {
+      print(err);
+      pr.dismiss();
+    });
+    return null;
   }
 }
