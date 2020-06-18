@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hitchhiker/main.dart';
 import 'package:hitchhiker/driver.dart';
-import 'package:hitchhiker/loginPage.dart';
-import 'package:hitchhiker/registerPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,7 +41,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change Password for " + widget.driver.fName),
+          title: new Text("Change Password"),
           content: new TextField(
             controller: passwordController,
             decoration: InputDecoration(
@@ -108,7 +106,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change contact for " + widget.driver.fName),
+          title: new Text("Change Contact Number"),
           content: new TextField(
               keyboardType: TextInputType.phone,
               controller: phoneNumController,
@@ -169,7 +167,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change residential hall for " + widget.driver.fName),
+          title: new Text("Change Residential Hall"),
           content: new TextField(
             controller: residentialHallController,
             decoration: InputDecoration(
@@ -228,7 +226,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change car brand for " + widget.driver.fName),
+          title: new Text("Change Car Brand"),
           content: new TextField(
             controller: carBrandController,
             decoration: InputDecoration(
@@ -287,7 +285,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change car model for " + widget.driver.fName),
+          title: new Text("Change Car Model"),
           content: new TextField(
             controller: carModelController,
             decoration: InputDecoration(
@@ -346,7 +344,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Change car plate for " + widget.driver.fName),
+          title: new Text("Change Car Plate"),
           content: new TextField(
             controller: carPlateController,
             decoration: InputDecoration(
@@ -393,85 +391,13 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
     );
   }
 
-  void _registerAccount() {
-    TextEditingController phoneNumController = TextEditingController();
-    print(widget.driver.fName + " " + widget.driver.lName);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Register new account?"),
-          content: new Text("Are your sure?"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Yes"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                print(
-                  phoneNumController.text,
-                );
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => RegisterScreen()));
-              },
-            ),
-            new FlatButton(
-              child: new Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _gotologinPage() {
-    print(widget.driver.fName + " " + widget.driver.lName);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Go to login page?" +
-              widget.driver.fName +
-              " " +
-              widget.driver.lName),
-          content: new Text("Are your sure?"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Yes"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => LoginPage()));
-              },
-            ),
-            new FlatButton(
-              child: new Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _gotologout() async {
     print(widget.driver.fName + " " + widget.driver.lName);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Go to login page?" +
-              widget.driver.fName +
-              " " +
-              widget.driver.lName),
+          title: new Text("Go to login page?"),
           content: new Text("Are your sure?"),
           actions: <Widget>[
             new FlatButton(
@@ -482,8 +408,10 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
                 await prefs.setString('email', '');
                 await prefs.setString('pass', '');
                 print("LOGOUT");
-                Navigator.pop(context,
-                    MaterialPageRoute(builder: (context) => SplashScreen()));
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => SplashScreen()),
+                    (Route<dynamic> route) => false);
               },
             ),
             new FlatButton(
@@ -507,7 +435,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.blue));
+        SystemUiOverlayStyle(statusBarColor: Colors.indigo[400]));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -585,7 +513,7 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(
-                                        Icons.card_membership,
+                                        Icons.credit_card,
                                       ),
                                       SizedBox(
                                         width: 5,
@@ -667,7 +595,22 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
                                 height: 5,
                               ),
                               Container(
-                                color: Colors.blue,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(146, 143, 206, 1),
+                                        Color.fromRGBO(170, 177, 229, 1)
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Color.fromRGBO(170, 177, 229, 1),
+                                        blurRadius: 12,
+                                        offset: Offset(0, 6))
+                                  ],
+                                ),
                                 child: Center(
                                   child: Text("My Profile ",
                                       style: TextStyle(
@@ -689,44 +632,256 @@ class _DriverProfilePageState extends State<DriverProfilePage> {
 
                 if (index == 1) {
                   return Padding(
-                    padding: EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       children: <Widget>[
-                        MaterialButton(
-                          onPressed: _changePassword,
-                          child: Text("CHANGE PASSWORD"),
+                        Container(
+                          height: 45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  "Password",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              Container(
+                                width: 130,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 77,
+                                      child: Text(
+                                        "********",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 20,
+                                      onPressed: _changePassword,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          onPressed: _changePhone,
-                          child: Text("CHANGE CONTACT NUMBER"),
+                        Container(
+                          height: 45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  "Contact Number",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              Container(
+                                width: 130,
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      widget.driver.phoneNum,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 20,
+                                      onPressed: _changePhone,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          onPressed: _changeResidentialHall,
-                          child: Text("CHANGE RESIDENTIAL HALL"),
+                        Container(
+                          height: 45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  "Residential Hall",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              Container(
+                                width: 130,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 80,
+                                      child: Text(
+                                        widget.driver.residentialHall,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 20,
+                                      onPressed: _changeResidentialHall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          onPressed: _changeCarBrand,
-                          child: Text("CHANGE CAR BRAND"),
+                        Container(
+                          height: 45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  "Car Brand",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              Container(
+                                width: 130,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 80,
+                                      child: Text(
+                                        widget.driver.carBrand,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 20,
+                                      onPressed: _changeCarBrand,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          onPressed: _changeCarModel,
-                          child: Text("CHANGE CAR MODEL"),
+                        Container(
+                          height: 45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  "Car Model",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              Container(
+                                width: 130,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 80,
+                                      child: Text(
+                                        widget.driver.carModel,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 20,
+                                      onPressed: _changeCarModel,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          onPressed: _changeCarPlate,
-                          child: Text("CHANGE CAR PLATE"),
+                        Container(
+                          height: 45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  "Car Plate",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              Container(
+                                width: 130,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 80,
+                                      child: Text(
+                                        widget.driver.carPlate,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 20,
+                                      onPressed: _changeCarPlate,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          onPressed: _registerAccount,
-                          child: Text("REGISTER"),
-                        ),
-                        MaterialButton(
-                          onPressed: _gotologinPage,
-                          child: Text("LOG IN"),
-                        ),
+                        SizedBox(height: 100),
                         MaterialButton(
                           onPressed: _gotologout,
-                          child: Text("LOG OUT"),
+                          child: Text(
+                            "Logout",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
                         )
                       ],
                     ),

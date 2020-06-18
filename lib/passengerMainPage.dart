@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hitchhiker/trip.dart';
 import 'package:hitchhiker/passenger.dart';
-import 'package:hitchhiker/profilePage.dart';
+import 'package:hitchhiker/passengerProfilePage.dart';
 import 'package:hitchhiker/acceptedTripPage.dart';
 import 'package:hitchhiker/passengerTripPage.dart';
 import 'package:hitchhiker/passengerHistoryPage.dart';
@@ -32,7 +32,7 @@ class _PassengerMainPageState extends State<PassengerMainPage> {
       PassengerHistoryPage(
         passenger: widget.passenger,
       ),
-      ProfilePage(passenger: widget.passenger),
+      PassengerProfilePage(passenger: widget.passenger),
     ];
   }
 
@@ -47,13 +47,12 @@ class _PassengerMainPageState extends State<PassengerMainPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.blue));
+        SystemUiOverlayStyle(statusBarColor: Colors.indigo[400]));
     return Scaffold(
       body: tabs[currentTabIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTapped,
         currentIndex: currentTabIndex,
-        //backgroundColor: Colors.blueGrey,
         type: BottomNavigationBarType.fixed,
 
         items: [

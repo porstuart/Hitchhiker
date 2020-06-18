@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hitchhiker/loginPage.dart';
-import 'package:hitchhiker/passengerRegisterPage.dart';
+import 'package:hitchhiker/driverRegisterPage.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -17,15 +17,13 @@ final TextEditingController _fNameController = TextEditingController();
 final TextEditingController _lNameController = TextEditingController();
 final TextEditingController _matricController = TextEditingController();
 final TextEditingController _phoneNumController = TextEditingController();
+final TextEditingController _emergeNumController = TextEditingController();
 final TextEditingController _residentialController = TextEditingController();
-final TextEditingController _carBrandController = TextEditingController();
-final TextEditingController _carModelController = TextEditingController();
-final TextEditingController _carPlateController = TextEditingController();
 File _image;
 
-String pathAsset = 'assets/images/licenseSample.png';
+String pathAsset = "assets/images/studentCardSample.jpg";
 String urlUpload =
-    "http://pickupandlaundry.com/hitchhiker/php/registrationDriver.php";
+    "http://pickupandlaundry.com/hitchhiker/php/registration.php";
 String _email,
     _password,
     _confPassword,
@@ -34,18 +32,16 @@ String _email,
     _gender,
     _matric,
     _phoneNum,
-    _residentialHall,
-    _carBrand,
-    _carModel,
-    _carPlate;
+    _emergeNum,
+    _residentialHall;
 
-class DriverRegisterScreen extends StatefulWidget {
+class PassengerRegisterScreen extends StatefulWidget {
   @override
   _RegisterUserState createState() => _RegisterUserState();
-  const DriverRegisterScreen({Key key}) : super(key: key);
+  const PassengerRegisterScreen({Key key}) : super(key: key);
 }
 
-class _RegisterUserState extends State<DriverRegisterScreen> {
+class _RegisterUserState extends State<PassengerRegisterScreen> {
   @override
   void initState() {
     super.initState();
@@ -73,7 +69,6 @@ class RegisterWidgetState extends State<RegisterWidget> {
     _image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 40);
     setState(() {});
-    //_image = await ImagePicker.pickImage(source: ImageSource.gallery);
   }
 
   void _onRegister() {
@@ -90,10 +85,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
     _gender = _genderVal;
     _matric = _matricController.text;
     _phoneNum = _phoneNumController.text;
+    _emergeNum = _emergeNumController.text;
     _residentialHall = _residentialController.text;
-    _carBrand = _carBrandController.text;
-    _carModel = _carModelController.text;
-    _carPlate = _carPlateController.text;
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
@@ -115,10 +108,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
         "gender": _gender,
         "matric": _matric,
         "phoneNum": _phoneNum,
-        "residentialHall": _residentialHall,
-        "carBrand": _carBrand,
-        "carModel": _carModel,
-        "carPlate": _carPlate
+        "emergeNum": _emergeNum,
+        "residentialHall": _residentialHall
       }).then((res) {
         print(res.statusCode);
         Toast.show(res.body, context,
@@ -131,10 +122,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
         _lNameController.text = '';
         _matricController.text = '';
         _phoneNumController.text = '';
+        _emergeNumController.text = '';
         _residentialController.text = '';
-        _carBrandController.text = '';
-        _carModelController.text = '';
-        _carPlateController.text = '';
         pr.dismiss();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
@@ -229,7 +218,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "Driver Register",
+                              "Passenger Register",
                               style: TextStyle(
                                   fontSize: ScreenUtil.getInstance().setSp(45),
                                   fontFamily: "Poppins-Bold",
@@ -395,6 +384,26 @@ class RegisterWidgetState extends State<RegisterWidget> {
                               height: ScreenUtil.getInstance().setHeight(30),
                             ),
                             Text(
+                              "Emergency Contact Number",
+                              style: TextStyle(
+                                  fontFamily: "Poppins-Medium",
+                                  fontSize: ScreenUtil.getInstance().setSp(26)),
+                            ),
+                            TextField(
+                              controller: _emergeNumController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
+                              decoration: InputDecoration(
+                                  hintText: "Emergency Contact Number",
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0)),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(30),
+                            ),
+                            Text(
                               "Residential Hall",
                               style: TextStyle(
                                   fontFamily: "Poppins-Medium",
@@ -411,55 +420,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                               height: ScreenUtil.getInstance().setHeight(30),
                             ),
                             Text(
-                              "Car Brand",
-                              style: TextStyle(
-                                  fontFamily: "Poppins-Medium",
-                                  fontSize: ScreenUtil.getInstance().setSp(26)),
-                            ),
-                            TextField(
-                              controller: _carBrandController,
-                              decoration: InputDecoration(
-                                  hintText: "Car Brand",
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
-                            ),
-                            Text(
-                              "Car Model",
-                              style: TextStyle(
-                                  fontFamily: "Poppins-Medium",
-                                  fontSize: ScreenUtil.getInstance().setSp(26)),
-                            ),
-                            TextField(
-                              controller: _carModelController,
-                              decoration: InputDecoration(
-                                  hintText: "Car Model",
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
-                            ),
-                            Text(
-                              "Car Plate",
-                              style: TextStyle(
-                                  fontFamily: "Poppins-Medium",
-                                  fontSize: ScreenUtil.getInstance().setSp(26)),
-                            ),
-                            TextField(
-                              controller: _carPlateController,
-                              decoration: InputDecoration(
-                                  hintText: "Car Plate",
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
-                            ),
-                            Text(
-                              "License Card",
+                              "Matric Card",
                               style: TextStyle(
                                   fontFamily: "Poppins-Medium",
                                   fontSize: ScreenUtil.getInstance().setSp(26)),
@@ -480,7 +441,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                                   )),
                             ),
                             Text(
-                                'Click on image above to take license picture'),
+                                'Click on image above to take student card picture'),
                           ],
                         ),
                       ),
@@ -565,7 +526,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Register as Passenger? Click here to ",
+                          "Register as Driver? Click here to ",
                           style: TextStyle(
                               fontFamily: "Poppins-Medium",
                               color: Colors.white),
@@ -575,7 +536,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PassengerRegisterScreen(),
+                                builder: (context) => DriverRegisterScreen(),
                               ),
                             );
                           },

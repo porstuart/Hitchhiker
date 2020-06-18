@@ -26,14 +26,28 @@ class _PassengerTripDetailState extends State<PassengerTripDetail> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.blue));
+        SystemUiOverlayStyle(statusBarColor: Colors.indigo[400]));
     return WillPopScope(
       onWillPop: _onBackPressAppBar,
       child: Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             title: Text('TRIP DETAILS'),
-            backgroundColor: Colors.blue,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Color.fromRGBO(146, 143, 206, 1),
+                  Color.fromRGBO(170, 177, 229, 1)
+                ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(170, 177, 229, 1),
+                    blurRadius: 12,
+                    offset: Offset(0, 6),
+                  )
+                ],
+              ),
+            ),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -147,16 +161,26 @@ class _DetailInterfaceState extends State<DetailInterface> {
               ),
               Container(
                 width: 350,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  gradient: LinearGradient(colors: [
+                    Color.fromRGBO(146, 143, 206, 1),
+                    Color.fromRGBO(170, 177, 229, 1)
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color.fromRGBO(170, 177, 229, 1),
+                        blurRadius: 12,
+                        offset: Offset(0, 6))
+                  ],
+                ),
                 child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0)),
-                  height: 40,
                   child: Text(
                     'ACCEPT TRIP',
                     style: TextStyle(fontSize: 16),
                   ),
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                  textColor: Colors.black,
                   elevation: 5,
                   onPressed: _onAcceptedTrip,
                 ),

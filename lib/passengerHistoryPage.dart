@@ -37,7 +37,7 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.blue));
+        SystemUiOverlayStyle(statusBarColor: Colors.indigo[400]));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -62,11 +62,16 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
                                     height: 20,
                                   ),
                                   Center(
-                                    child: Text("Hitchhiker",
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black)),
+                                    child: Text(
+                                      "HITCHHIKER",
+                                      style: TextStyle(
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontFamily: "Agne",
+                                        height: 1,
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(height: 10),
                                   Container(
@@ -120,7 +125,7 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
                                             Row(
                                               children: <Widget>[
                                                 Icon(
-                                                  Icons.card_membership,
+                                                  Icons.credit_card,
                                                 ),
                                                 SizedBox(
                                                   width: 5,
@@ -143,7 +148,22 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
                               height: 4,
                             ),
                             Container(
-                              color: Colors.blue,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromRGBO(146, 143, 206, 1),
+                                      Color.fromRGBO(170, 177, 229, 1)
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(170, 177, 229, 1),
+                                      blurRadius: 12,
+                                      offset: Offset(0, 6))
+                                ],
+                              ),
                               child: Center(
                                 child: Text("Trip History",
                                     style: TextStyle(
@@ -175,9 +195,12 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
 
                     if (tempDate.isBefore(new DateTime.now())) {
                       return Padding(
-                        padding: EdgeInsets.all(2.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Card(
-                          elevation: 2,
+                          shape: BeveledRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          elevation: 0,
                           child: InkWell(
                             onTap: () => _onTripDetail(
                               data[index]['tripID'],
@@ -197,45 +220,76 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
                                 data[index]['tripID'].toString(),
                                 data[index]['destination'].toString()),
                             child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Row(
+                              padding: const EdgeInsets.all(0.0),
+                              child: Stack(
                                 children: <Widget>[
                                   Container(
-                                      height: 100,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: Colors.white),
-                                          image: DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: AssetImage(
-                                                  "assets/images/trip.jpg")))),
-                                  Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        children: <Widget>[
-                                          Text(
-                                              data[index]['destination']
-                                                  .toString()
-                                                  .toUpperCase(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          SizedBox(
-                                            height: 5,
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(24),
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromRGBO(80, 167, 194, 1),
+                                            Color.fromRGBO(183, 248, 219, 1)
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color.fromRGBO(
+                                                80, 167, 194, 0.8),
+                                            blurRadius: 12,
+                                            offset: Offset(0, 6))
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Padding(padding: EdgeInsets.all(20)),
+                                        Container(
+                                            height: 100,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.rectangle,
+                                                border: Border.all(
+                                                    color: Colors.white),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.fill,
+                                                    image: AssetImage(
+                                                        "assets/images/trip.jpg")))),
+                                        Expanded(
+                                          child: Container(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(34),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text(
+                                                      data[index]['destination']
+                                                          .toString()
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(data[index]['origin']),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(data[index]
+                                                      ['depatureDate']),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(data[index]
+                                                      ['depatureTime']),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          Text(data[index]['origin']),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(data[index]['depatureDate']),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(data[index]['depatureTime']),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -280,7 +334,7 @@ class _PassengerHistoryPageState extends State<PassengerHistoryPage> {
   }
 
   Future<Null> refreshList() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 0));
     this.makeRequest();
     return null;
   }

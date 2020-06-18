@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hitchhiker/driver.dart';
 import 'package:hitchhiker/passenger.dart';
-import 'package:hitchhiker/registerPage.dart';
+import 'package:hitchhiker/passengerRegisterPage.dart';
 import 'package:hitchhiker/driverMainPage.dart';
 import 'package:hitchhiker/forgotPassword.dart';
 import 'package:hitchhiker/passengerMainPage.dart';
@@ -77,11 +77,12 @@ class _LoginPageState extends State<LoginPage> {
               phoneNum: dres[5],
               emergeNum: dres[6],
               residentialHall: dres[7]);
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      PassengerMainPage(passenger: passenger)));
+                      PassengerMainPage(passenger: passenger)),
+              (Route<dynamic> route) => false);
         } else {
           pr.dismiss();
         }
@@ -124,10 +125,11 @@ class _LoginPageState extends State<LoginPage> {
               carModel: dres[8],
               carPlate: dres[9],
               tripCount: dres[10]);
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => DriverMainPage(driver: driver)));
+                  builder: (context) => DriverMainPage(driver: driver)),
+              (Route<dynamic> route) => false);
         } else {
           pr.dismiss();
         }
@@ -141,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onRegister() {
     print('onRegister');
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+        context, MaterialPageRoute(builder: (context) => PassengerRegisterScreen()));
   }
 
   void _onForgot() {
@@ -257,224 +259,232 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Image.asset(
-                  "assets/images/hitchhikerLogo.png",
-                  width: ScreenUtil.getInstance().setWidth(550),
-                  height: ScreenUtil.getInstance().setHeight(400),
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/background.jpg"),
+                fit: BoxFit.cover)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Image.asset(
+                    "assets/images/hitchhikerLogo.png",
+                    width: ScreenUtil.getInstance().setWidth(550),
+                    height: ScreenUtil.getInstance().setHeight(400),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              Image.asset("assets/images/background.png")
-            ],
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        width: ScreenUtil.getInstance().setWidth(110),
-                        height: ScreenUtil.getInstance().setHeight(110),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(180),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0.0, 15.0),
-                            blurRadius: 15.0)
+                Expanded(
+                  child: Container(),
+                ),
+              ],
+            ),
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          width: ScreenUtil.getInstance().setWidth(110),
+                          height: ScreenUtil.getInstance().setHeight(110),
+                        )
                       ],
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Login",
-                            style: TextStyle(
-                                fontSize: ScreenUtil.getInstance().setSp(45),
-                                fontFamily: "Poppins-Bold",
-                                letterSpacing: .6),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
-                          ),
-                          Text(
-                            "Email",
-                            style: TextStyle(
-                                fontFamily: "Poppins-Medium",
-                                fontSize: ScreenUtil.getInstance().setSp(26)),
-                          ),
-                          TextField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                                hintText: "Email",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 12.0)),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(30),
-                          ),
-                          Text(
-                            "Password",
-                            style: TextStyle(
-                                fontFamily: "Poppins-Medium",
-                                fontSize: ScreenUtil.getInstance().setSp(26)),
-                          ),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                hintText: "Password",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 12.0)),
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(20),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Center(
-                                child: Container(
-                                  height: 40,
-                                  width: 100,
-                                  child: DropdownButton<String>(
-                                    items:
-                                        _user.map((String dropDownStringItem) {
-                                      return DropdownMenuItem<String>(
-                                        value: dropDownStringItem,
-                                        child: Text(
-                                          dropDownStringItem,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String newValueSelected) {
-                                      _onDropDownItemSelected(newValueSelected);
-                                    },
-                                    value: _currentUser,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: ScreenUtil.getInstance().setHeight(10),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  _onForgot();
-                                },
-                                child: Text(
-                                  "Forgot Password",
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Colors.blue,
-                                      fontFamily: "Poppins-Medium",
-                                      fontSize:
-                                          ScreenUtil.getInstance().setSp(28)),
-                                ),
-                              ),
-                            ],
-                          ),
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(180),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0.0, 15.0),
+                              blurRadius: 15.0)
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(height: ScreenUtil.getInstance().setHeight(40)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      InkWell(
-                        child: Container(
-                          width: ScreenUtil.getInstance().setWidth(330),
-                          height: ScreenUtil.getInstance().setHeight(100),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Color(0xFF17EAD9), Color(0xDD6078EA)],
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 16.0, bottom: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontSize: ScreenUtil.getInstance().setSp(45),
+                                  fontFamily: "Poppins-Bold",
+                                  letterSpacing: .6),
                             ),
-                            borderRadius: BorderRadius.circular(6.0),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color(0xFF6078EA).withOpacity(.3),
-                                  offset: Offset(0.0, 8.0),
-                                  blurRadius: 8.0)
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                _onLogin();
-                              },
-                              child: Center(
-                                child: Text(
-                                  "LOGIN",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: "Poppins-Bold",
-                                      fontSize: 18,
-                                      letterSpacing: 1.0),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(30),
+                            ),
+                            Text(
+                              "Email",
+                              style: TextStyle(
+                                  fontFamily: "Poppins-Medium",
+                                  fontSize: ScreenUtil.getInstance().setSp(26)),
+                            ),
+                            TextField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                  hintText: "Email",
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0)),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(30),
+                            ),
+                            Text(
+                              "Password",
+                              style: TextStyle(
+                                  fontFamily: "Poppins-Medium",
+                                  fontSize: ScreenUtil.getInstance().setSp(26)),
+                            ),
+                            TextField(
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                  hintText: "Password",
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0)),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(20),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Center(
+                                  child: Container(
+                                    height: 40,
+                                    width: 100,
+                                    child: DropdownButton<String>(
+                                      items: _user
+                                          .map((String dropDownStringItem) {
+                                        return DropdownMenuItem<String>(
+                                          value: dropDownStringItem,
+                                          child: Text(
+                                            dropDownStringItem,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String newValueSelected) {
+                                        _onDropDownItemSelected(
+                                            newValueSelected);
+                                      },
+                                      value: _currentUser,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(10),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    _onForgot();
+                                  },
+                                  child: Text(
+                                    "Forgot Password",
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        color: Colors.blue,
+                                        fontFamily: "Poppins-Medium",
+                                        fontSize:
+                                            ScreenUtil.getInstance().setSp(28)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: ScreenUtil.getInstance().setHeight(40)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        InkWell(
+                          child: Container(
+                            width: ScreenUtil.getInstance().setWidth(330),
+                            height: ScreenUtil.getInstance().setHeight(100),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF17EAD9), Color(0xDD6078EA)],
+                              ),
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xFF6078EA).withOpacity(.3),
+                                    offset: Offset(0.0, 8.0),
+                                    blurRadius: 8.0)
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  _onLogin();
+                                },
+                                child: Center(
+                                  child: Text(
+                                    "LOGIN",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Poppins-Bold",
+                                        fontSize: 18,
+                                        letterSpacing: 1.0),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(100),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("New User? ",
-                          style: TextStyle(fontFamily: "Poppins-Medium")),
-                      GestureDetector(
-                        onTap: () {
-                          _onRegister();
-                        },
-                        child: Text("Register",
+                      ],
+                    ),
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(100),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("New User? ",
                             style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: Color(0xFF5D74E3),
-                                fontFamily: "Poppins-Bold")),
-                      ),
-                    ],
-                  )
-                ],
+                                fontFamily: "Poppins-Medium",
+                                color: Colors.white)),
+                        GestureDetector(
+                          onTap: () {
+                            _onRegister();
+                          },
+                          child: Text("Register",
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue[400],
+                                  fontFamily: "Poppins-Bold")),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

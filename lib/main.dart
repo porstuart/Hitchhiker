@@ -5,7 +5,8 @@ import 'package:hitchhiker/loginPage.dart';
 void main() => runApp(MaterialApp(
       theme: ThemeData(
           hintColor: Color(0xFFC0F0E8),
-          primaryColor: Color(0xFF80E1D1),
+          primaryColor: Colors.indigo[400],
+          accentColor: Colors.green,
           fontFamily: "Montserrat"),
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
@@ -38,8 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
       fit: StackFit.expand,
       children: <Widget>[
         Container(
-          decoration: BoxDecoration(color: Colors.white),
-        ),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/background.jpg"),
+                    fit: BoxFit.cover))),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -67,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: <Widget>[
                     CircularProgressIndicator(
                       valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.black),
+                          new AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
@@ -76,10 +79,13 @@ class _SplashScreenState extends State<SplashScreen> {
                       "Convenience Trip",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 50.0),
                     ),
                   ],
                 ))

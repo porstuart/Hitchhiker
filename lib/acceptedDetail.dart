@@ -22,14 +22,28 @@ class _AcceptedDetailState extends State<AcceptedDetail> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.blue));
+        SystemUiOverlayStyle(statusBarColor: Colors.indigo[400]));
     return WillPopScope(
       onWillPop: _onBackPressAppBar,
       child: Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             title: Text('TRIP DETAILS'),
-            backgroundColor: Colors.blue,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Color.fromRGBO(146, 143, 206, 1),
+                  Color.fromRGBO(170, 177, 229, 1)
+                ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(170, 177, 229, 1),
+                    blurRadius: 12,
+                    offset: Offset(0, 6),
+                  )
+                ],
+              ),
+            ),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -138,7 +152,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   Future<String> acceptRequest() async {
-    String urlLoadJobs = "http://pickupandlaundry.com/hitchhiker/php/acceptTrip.php";
+    String urlLoadJobs =
+        "http://pickupandlaundry.com/hitchhiker/php/acceptTrip.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Accepting Trip");
@@ -166,7 +181,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   void _onLogin(String email, BuildContext ctx) {
-    String urlgetuser = "http://pickupandlaundry.com/hitchhiker/php/getUser.php";
+    String urlgetuser =
+        "http://pickupandlaundry.com/hitchhiker/php/getUser.php";
 
     http.post(urlgetuser, body: {
       "email": email,

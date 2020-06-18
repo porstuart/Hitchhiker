@@ -265,6 +265,14 @@ class _AddTripPageState extends State<AddTripPage> {
                                   final timePick = await showTimePicker(
                                     context: context,
                                     initialTime: new TimeOfDay.now(),
+                                    builder:
+                                        (BuildContext context, Widget child) {
+                                      return MediaQuery(
+                                        data: MediaQuery.of(context).copyWith(
+                                            alwaysUse24HourFormat: false),
+                                        child: child,
+                                      );
+                                    },
                                   );
 
                                   if (timePick != null) {
