@@ -215,7 +215,7 @@ class _DriverTripPageState extends State<DriverTripPage> {
                             child: Stack(
                               children: <Widget>[
                                 Container(
-                                  height: 150,
+                                  height: 180,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(24),
                                     gradient: LinearGradient(

@@ -568,7 +568,7 @@ class _PassengerProfilePageState extends State<PassengerProfilePage> {
                                 ),
                               ),
                               Container(
-                                width: 130,
+                                width: 140,
                                 child: Row(
                                   children: <Widget>[
                                     Text(

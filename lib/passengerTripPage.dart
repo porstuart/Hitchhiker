@@ -214,7 +214,7 @@ class _PassengerTripPageState extends State<PassengerTripPage> {
                       child: Stack(
                         children: <Widget>[
                           Container(
-                            height: 150,
+                            height: 180,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(24),
                               gradient: LinearGradient(

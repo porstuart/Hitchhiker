@@ -214,7 +214,7 @@ class _AcceptedTripPageState extends State<AcceptedTripPage> {
                             child: Stack(
                               children: <Widget>[
                                 Container(
-                                  height: 150,
+                                  height: 180,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(24),
                                     gradient: LinearGradient(
